@@ -50,9 +50,9 @@ Auction
                                     <img class="rounded-2" src="/lot-images/{{ $lot->image }}" alt="">
                                 </div>
                                 <div class="mt-5">
-                                    <span class="h4 classic fw-semibold d-block mb-2">{{$lot->name}}</span>
+                                    <span class="h4 classic fw-semibold d-block mb-2 lot-name">{{$lot->name}}</span>
                                     <span class="h6 text-muted fw-light d-block mb-2">Estimate: Rp{{number_format($lot->min_price)}} - Rp{{number_format($lot->max_price)}}</span>
-                                    <span class="h5 fw-normal f-block mb-0">Current Bid: Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lot->id)->orderBy('bid_price')->first()) ? $ac->bid_price : 0,0,',','.') }}</span>
+                                    <span class="h5 fw-normal f-block mb-0">Current bid: Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lot->id)->orderBy('bid_price')->first()) ? $ac->bid_price : 0,0,',','.') }}</span>
                                 </div>
                             </div>
                             <div class="mt-2 mb-0 text-sm">
@@ -72,16 +72,16 @@ Auction
                                 <span class="text-nowrap text-xs text-muted">Giblartar Anggaran</span>
                             </div>
                             <div class="mt-2 mb-0 text-sm">
-                                <a href="dashboard/{{$lot->id}}" class="btn text-center w-100 blue-800">
+                                <a href="{{ url('lot',$lot->id)}}" class="btn text-center w-100 blue-800">
                                     <p class="text-center">Bid</p>
                                 </a>
-                                <a class="btn btn-info" href="{{ route('lot.show',$lot->id) }}">Show</a>
+                                {{-- <a class="btn btn-info" href="{{ route('lot.show',$lot->id) }}">Show</a>
                                 <a class="btn btn-primary" href="{{ route('lot.edit',$lot->id) }}">Edit</a>
                                 <form action="{{ route('lot.destroy',$lot->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
+                                </form> --}}
                             </div>
                         </div>
                     </div>

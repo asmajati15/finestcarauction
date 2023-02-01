@@ -57,7 +57,7 @@ class LotController extends Controller
 
         Lot::create($input);
 
-        return redirect()->route('auction.dashboard')->with('success', 'Product created successfully.');
+        return redirect()->route('lot.index')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -119,8 +119,7 @@ class LotController extends Controller
 
         $lot->update($input);
 
-        return redirect()->route('auction.dashboard')
-            ->with('success', 'Product updated successfully');
+        return redirect()->route('lot.index')->with('success', 'Product updated successfully');
     }
 
     /**
@@ -133,7 +132,6 @@ class LotController extends Controller
     {
         $lot->delete();
      
-        return redirect()->route('auction.dashboard')
-                        ->with('success','Product deleted successfully');
+        return redirect()->route('lot.index')->with('success','Product deleted successfully');
     }
 }

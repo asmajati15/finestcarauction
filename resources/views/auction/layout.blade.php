@@ -61,8 +61,8 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <!-- Brand -->
-                <a class="navbar-brand py-lg-2 mb-lg-5 px-lg-6 me-0" href="#">
-                    <img src="image/logo.png" alt="...">
+                <a class="navbar-brand py-lg-2 mb-lg-5 px-lg-6 me-0" href="{{route('dashboard')}}">
+                    <img src="{{asset('image/logo.png')}}" alt="...">
                 </a>
                 <!-- User menu (mobile) -->
                 <div class="navbar-user d-lg-none">
@@ -88,7 +88,7 @@
                     <!-- Navigation -->
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{route('lot.index')}}">
                                 <i class="bi bi-hammer"></i> Auction
                             </a>
                         </li>
