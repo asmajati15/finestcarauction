@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lot;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LotController extends Controller
 {
@@ -14,8 +15,9 @@ class LotController extends Controller
      */
     public function index()
     {
+        $current_time = time();
         $lots = Lot::get();
-        return view('auction.dashboard', compact('lots'));
+        return view('auction.dashboard', compact('lots','current_time'));
     }
 
     /**
@@ -68,9 +70,10 @@ class LotController extends Controller
      */
     public function show($id)
     {
+        $current_time = time();
         $lots = Lot::where('id', $id)->first();
         if ($lots) {
-            return view('auction.detail', compact('lots'));
+            return view('auction.detail', compact('lots','current_time'));
         } else {
             return response()->view(404);
         }

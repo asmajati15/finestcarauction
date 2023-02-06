@@ -55,9 +55,15 @@ Detail
                                         </span>
                                         <span class="h4 text-muted fw-light d-block mt-1">{{date('d M Y, h:m A e', strtotime($lots->end_time));}}</span>
                                     </div>
-                                    <a href="lot/{{$lots->id}}" class="btn text-center w-100 blue-800 mt-5">
-                                        <p class="text-center">Bid</p>
-                                    </a>
+                                    @if ($lots->id != $current_time)
+                                        <button type="button" class="btn btn-outline-secondary text-center w-100 mt-5" disabled>
+                                            <p class="text-center">Bid Ends</p>
+                                        </button>
+                                    @else
+                                        <button type="button" class="btn text-center w-100 blue-800 mt-5" data-bs-toggle="modal" data-bs-target="#BidModal">
+                                            <p class="text-center">Bid</p>
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -67,6 +73,29 @@ Detail
         </div>
     </main>
 </div>
+<form action="{{ route('newBid',$lots->id) }}" method="post" enctype="multipart/form-data">
+    @csrf
+    <div class="modal fade" id="BidModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Bid</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <label class="form-label">New Bid</label>
+                        <input type="text" class="form-control" name="bid_price">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <input type="submit" class="btn blue-800" name="save" value="Submit">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 @endsection
 
 @section('js')

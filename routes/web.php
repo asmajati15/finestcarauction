@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LotController;
+use App\Http\Controllers\BidController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,10 +28,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    // Route::get('/auction', [LotController::class, 'index'])->name('lot.auction');
-    // Route::get('/auction/{id}', [LotController::class, 'show'])->name('lot.show');
-    // Route::post('/auction', [LotController::class,'store'])->name('lot.store');
-    Route::resource('/lot', LotController::class);
+    Route::get('/lot', [LotController::class, 'index'])->name('lot.index');
+    Route::post('/lot', [LotController::class,'store'])->name('lot.store');
+    Route::get('/lot/{lot_id}', [LotController::class, 'show'])->name('lot.show');
+    Route::put('/lot/{lot_id}', [LotController::class, 'update'])->name('lot.update');
+    Route::delete('/lot/{lot_id}', [LotController::class, 'destroy'])->name('lot.destroy');
+    // Route::resource('/lot', LotController::class);
+    Route::post('/bid/{lot_id}', [BidController::class, 'newBid'])->name('newBid');
 });
 
 require __DIR__.'/auth.php';

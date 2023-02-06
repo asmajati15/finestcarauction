@@ -9,20 +9,20 @@ class Lot extends Model
 {
     use HasFactory;
 
-    // protected $fillable = [
-    //     'name',
-    //     'description',
-    //     'min_price',
-    //     'max_price',
-    //     'buyout_price',
-    //     'end_time',
-    //     'image',
-    //     'user_id',
-    //     'category_id',
-    //     'end_time',
-    //     'created_at',
-    //     'updated_at',
-    // ];
+    /* protected $fillable = [
+        'name',
+        'description',
+        'min_price',
+        'max_price',
+        'buyout_price',
+        'end_time',
+        'image',
+        'user_id',
+        'category_id',
+        'end_time',
+        'created_at',
+        'updated_at',
+    ]; */
 
     protected $guarded = ['id'];    
 }

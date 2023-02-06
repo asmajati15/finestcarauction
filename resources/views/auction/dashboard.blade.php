@@ -72,9 +72,18 @@ Auction
                                 <span class="text-nowrap text-xs text-muted">Giblartar Anggaran</span>
                             </div>
                             <div class="mt-2 mb-0 text-sm">
-                                <a href="{{ url('lot',$lot->id)}}" class="btn text-center w-100 blue-800">
-                                    <p class="text-center">Bid</p>
-                                </a>
+                                @if ($lot->end_time >= $current_time)
+                                    <button type="button" class="btn btn-outline-secondary text-center w-100" disabled>
+                                        <p class="text-center">Bid Ends</p>
+                                    </button>
+                                    <a href="{{ url('lot',$lot->id)}}" class="btn text-center w-100 blue-800">
+                                        <p class="text-center">Bid</p>
+                                    </a>
+                                @else
+                                    <a href="{{ url('lot',$lot->id)}}" class="btn text-center w-100 blue-800">
+                                        <p class="text-center">Bid</p>
+                                    </a>
+                                @endif
                                 {{-- <a class="btn btn-info" href="{{ route('lot.show',$lot->id) }}">Show</a>
                                 <a class="btn btn-primary" href="{{ route('lot.edit',$lot->id) }}">Edit</a>
                                 <form action="{{ route('lot.destroy',$lot->id) }}" method="POST">
