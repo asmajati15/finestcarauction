@@ -35,6 +35,14 @@
             color: #fff;
         }
 
+        .lot-name {
+            display: block;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
         @media(min-width: 1024px) {
             .large-screen {
                 width: 80%;
@@ -93,13 +101,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-cart"></i> Buy Now
+                            <a class="nav-link" href="{{route('lot.sell')}}">
+                                <i class="bi bi-wallet"></i> Sell Item
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-wallet"></i> Sell Item
+                            <a class="nav-link" href="{{route('bid.history')}}">
+                                <i class="bi bi-clock-history"></i> History
                             </a>
                         </li>
                         </li>
@@ -127,6 +135,7 @@
         
     </div>
     <!-- <script src="{{ mix('/js/app.js') }}"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
     @yield('js')
 </body>

@@ -36,7 +36,7 @@ Detail
                                         <span class="h6 text-muted fw-light d-block mt-1 mb-5">(0 bids)</span>
                                     </div>
                                     <div class="col text-end">
-                                        <span class="h3 fw-normal f-block mb-0">Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lots->id)->orderBy('bid_price')->first()) ? $ac->bid_price : 0,0,',','.') }}</span>
+                                        <span class="h3 fw-normal f-block mb-0">Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lots->id)->orderBy('bid_price','DESC') ->first()) ? $ac->bid_price : 0,0,',','.') }}</span>
                                     </div>
                                     <hr style="clear:both; visibility:hidden; padding: 0px; margin: 0px;">
                                     <div class="col">
@@ -55,7 +55,9 @@ Detail
                                         </span>
                                         <span class="h4 text-muted fw-light d-block mt-1">{{date('d M Y, h:m A e', strtotime($lots->end_time));}}</span>
                                     </div>
-                                    @if ($lots->id != $current_time)
+
+                                    {{-- @dd($lots->end_time,$current_time,Date(strtotime($current_time)) < Date(strtotime($lots->end_time))) --}}
+                                    @if ($lots->end_time <= $current_time)
                                         <button type="button" class="btn btn-outline-secondary text-center w-100 mt-5" disabled>
                                             <p class="text-center">Bid Ends</p>
                                         </button>
@@ -73,7 +75,7 @@ Detail
         </div>
     </main>
 </div>
-<form action="{{ route('newBid',$lots->id) }}" method="post" enctype="multipart/form-data">
+<form action="{{ route('bid.new',$lots->id) }}" method="post" enctype="multipart/form-data">
     @csrf
     <div class="modal fade" id="BidModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">

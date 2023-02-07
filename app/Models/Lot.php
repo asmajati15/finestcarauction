@@ -24,5 +24,11 @@ class Lot extends Model
         'updated_at',
     ]; */
 
-    protected $guarded = ['id'];    
+    protected $guarded = ['id'];   
+    
+    public function user(){
+
+        return $this->belongsTo(User::class);
+
+    }
 }
