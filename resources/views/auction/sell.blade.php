@@ -1,7 +1,7 @@
 @extends('auction/layout')
 
 @section('title')
-Detail
+Finestcarauction - Sell Lots
 @endsection
 
 @section('main-content')

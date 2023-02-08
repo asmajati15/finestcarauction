@@ -1,7 +1,7 @@
 @extends('auction/layout')
 
 @section('title')
-Detail
+Finestcarauction - History
 @endsection
 
 @section('main-content')

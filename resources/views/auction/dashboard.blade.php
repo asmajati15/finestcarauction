@@ -1,7 +1,7 @@
 @extends('auction/layout')
 
 @section('title')
-Auction
+Finestcarauction
 @endsection
 
 @section('main-content')
@@ -50,7 +50,7 @@ Auction
                                     <img class="rounded-2" src="/lot-images/{{ $lot->image }}" alt="">
                                 </div>
                                 <div class="mt-5">
-                                    <span class="h4 classic fw-semibold d-block mb-2 lot-name">{{$lot->name}}</span>
+                                    <span class="h4 classic fw-semibold d-block mb-2 lot-name lots-name">{{$lot->name}}</span>
                                     <span class="h6 text-muted fw-light d-block mb-2">Estimate: Rp{{number_format($lot->min_price)}} - Rp{{number_format($lot->max_price)}}</span>
                                     <span class="h5 fw-normal f-block mb-0">Current bid: Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lot->id)->orderBy('bid_price','DESC')->first()) ? $ac->bid_price : 0,0,',','.') }}</span>
                                 </div>

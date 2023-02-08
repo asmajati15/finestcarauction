@@ -43,6 +43,18 @@
             text-overflow: ellipsis;
         }
 
+        .lots-name {
+            text-transform: uppercase;
+        }
+
+        .outer{
+            height: 200px; overflow: hidden;
+        }
+        
+        .readmore{
+            height: auto !important;
+        }
+
         @media(min-width: 1024px) {
             .large-screen {
                 width: 80%;

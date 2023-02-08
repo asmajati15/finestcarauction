@@ -1,7 +1,7 @@
 @extends('auction/layout')
 
 @section('title')
-Detail
+Finestcarauction - {{$lots->name}}
 @endsection
 
 @section('main-content')
@@ -14,16 +14,13 @@ Detail
                     <div class="item-images">
                         <img src="/lot-images/{{$lots->image}}" alt="">
                     </div>
-                    <h2 class="classic fw-semibold d-block my-5">Description<h2>
-                    <h4 class="fw-semi-bold d-block mb-2">{{$lots->name}}</h4>
-                    <h5 class="text-muted fw-light d-block mb-2">{{$lots->description}}</h5>
                 </div>
                 <div class="col-xl-6 col-sm-6 col-12">
                     <div class="card shadow border-0">
                         <div class="card-body">
                             <div class="m-2">
                                 <div class="row">
-                                    <span class="h1 classic fw-semibold d-block mb-5">{{$lots->name}}</span>
+                                    <span class="h1 classic fw-semibold d-block mb-5 lots-name">{{$lots->name}}</span>
                                     <div class="col">
                                         <span class="h4 text-muted fw-light d-block mb-2">Estimate:</span>
                                     </div>
@@ -70,6 +67,18 @@ Detail
                             </div>
                         </div>
                     </div>
+                    <h2 class="classic fw-semibold d-block my-5">Description<h2>
+                    <h4 class="fw-semi-bold d-block mb-2">{{$lots->name}}</h4>
+                        {{-- <div class="outer" id="portfolio"> --}}
+                            <h5 class="text-muted fw-light d-block mb-2">{{$lots->description}}</h5>
+                        {{-- </div> --}}
+                    {{-- <div style="padding-top: 30px;">
+                        <a class="button" style="color: #23448d">
+                          <strong id="expandbtn">
+                            Read More
+                          </strong>
+                        </a>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -152,6 +161,18 @@ Detail
                 }
             }, 1000);
         }
+    });
+
+    $(document).ready(function () {
+    $("#expandbtn").click(function () {
+        if ($("#portfolio").hasClass("readmore")) {
+        $("#expandbtn").html("Read More");
+        $("#portfolio").removeClass("readmore");
+        } else {
+        $("#expandbtn").html("Read Less");
+        $("#portfolio").addClass("readmore");
+        }
+    });
     });
 </script>
 @endsection
