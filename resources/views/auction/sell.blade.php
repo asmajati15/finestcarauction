@@ -59,7 +59,7 @@ Finestcarauction - Sell Lots
                         <tr>
                             <td>
                                 <img alt="{{$lot->name}}" src="/lot-images/{{ $lot->image }}"  class="avatar avatar-sm rounded-circle me-2">
-                                <a class="text-heading font-semibold" href="#"> {{$lot->name}} </a>
+                                <a class="text-heading font-semibold" href="{{ route('lot.show',$lot->id) }}"> {{$lot->name}} </a>
                             </td>
                             <td>
                                 Rp{{number_format($lot->min_price)}}
@@ -80,16 +80,13 @@ Finestcarauction - Sell Lots
                             </td>
                             <td class="text-end"> 
                                 {{-- <a class="btn btn-primary" href="{{ route('lot.edit',$lot->id) }}">Edit</a> --}}
-                                <a href="{{ route('lot.show',$lot->id) }}" class="btn btn-sm btn-square btn-neutral">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                <a href="#" class="btn btn-sm btn-square btn-neutral">
+                                <a class="btn btn-sm btn-square btn-neutral" data-bs-toggle="modal" data-bs-target="#UpdateModal" data-url="{{ route('lot.update',$lot->id) }}" data-name="{{ $lot->name }}" data-description="{{ $lot->description }}" data-min_price="{{ $lot->min_price }}" data-max_price="{{ $lot->max_price }}" data-buyout_price="{{ $lot->buyout_price }}">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <form action="{{ route('lot.destroy',$lot->id) }}" method="POST" class="d-inline-block">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-square btn-neutral">
+                                    <button type="submit" class="btn btn-sm btn-square btn-neutral" onclick="return confirm('Are you sure want to delete this lot?')">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>

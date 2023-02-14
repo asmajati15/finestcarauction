@@ -81,7 +81,7 @@ class LotController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        return redirect()->route('lot.index')->with('success', 'Product created successfully.');
+        return redirect()->back()->with('success', 'Lots created successfully!');
     }
 
     /**
@@ -92,6 +92,33 @@ class LotController extends Controller
      */
     public function show($id)
     {
+        // Ambil data lelang dari database
+        $auction = Auction::find($auction_id);
+
+        // Periksa apakah lelang sudah berakhir
+        if ($auction->end_time < now()) {
+
+            // Ambil semua penawaran pada lelang ini
+            $bids = Bid::where('auction_id', $auction->id)->get();
+
+            // Urutkan penawaran dari nilai tertinggi ke terendah
+            $bids = $bids->sortByDesc('value');
+
+            // Ambil penawaran tertinggi
+            $winner = $bids->first();
+
+            // Simpan pemenang lelang ke database
+            $auction->winner_id = $winner->user_id;
+            $auction->save();
+
+            // Lakukan tindakan lain, misalnya mengirim email ke pemenang lelang dan pengguna lainnya
+
+        } else {
+
+            // Lelang masih berjalan, lakukan tindakan lain yang diperlukan
+
+        }
+
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $lots = Lot::where('id', $id)->first();
         if ($lots) {
@@ -131,7 +158,7 @@ class LotController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $input = $request->all();
+        $input = $request->except(['_token', '_method' ]);
 
         if ($image = $request->file('image')) {
             $destinationPath = 'lot-images/';
@@ -142,9 +169,10 @@ class LotController extends Controller
             unset($input['image']);
         }
 
-        $lot->update($input);
+        Lot::where('id', $lot)->update($input);
+        // dd($input);
 
-        return redirect()->route('lot.index')->with('success', 'Product updated successfully');
+        return redirect()->back()->with('success', 'Lots updated successfully!');
     }
 
     /**
@@ -155,8 +183,26 @@ class LotController extends Controller
      */
     public function destroy(Lot $lot, $id)
     {
-        $lot->where('id', $id)->delete();
+        $lot = Lot::find($id);
+
+        if ($lot) {
+            // Hapus gambar dari folder public
+            $imagePath = public_path('lot-images/' . $lot->image);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+
+            // Hapus field dari database
+            $lot->where('id', $id)->delete();
+
+            return redirect()->back()->with('success', 'Lots deleted successfully!');
+        } else {
+            return redirect()->back()->with('error', 'Lots deleted failed!');
+        }
+
+
+        // $lot->where('id', $id)->delete();
      
-        return redirect()->route('lot.sell')->with('success','Product deleted successfully');
+        // return redirect()->route('lot.sell')->with('success','Product deleted successfully');
     }
 }

@@ -63,6 +63,11 @@ Finestcarauction - {{$lots->name}}
                                             <p class="text-center">Bid</p>
                                         </button>
                                     @endif
+                                    @if ($user_tertinggi = DB::table('bids')->orderBy('bid_price', 'desc')->first())
+                                        <button type="button" class="btn text-center w-100 blue-800 mt-5" data-bs-toggle="modal" data-bs-target="#BidModal">
+                                            <p class="text-center">Buy</p>
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
