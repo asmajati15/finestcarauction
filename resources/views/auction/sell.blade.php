@@ -52,7 +52,8 @@ Finestcarauction - Sell Lots
                     </thead>
                     <tbody>
                         @foreach ($lots as $lot)
-                        @if (auth()->user()->id == $lot->user_id)
+                        {{-- @if ($lot->user->level == 0) --}}
+                        {{-- @if (auth()->user()->id == $lot->user_id) --}}
                         
                         {{-- @dd($lot) --}}
                         {{-- @dd(DB::table('bids')->where('lot_id',5)->orderBy('bid_price','DESC')->get()) --}}
@@ -62,7 +63,7 @@ Finestcarauction - Sell Lots
                                 <a class="text-heading font-semibold" href="{{ route('lot.show',$lot->id) }}"> {{$lot->name}} </a>
                             </td>
                             <td>
-                                Rp{{number_format($lot->min_price)}}
+                                Rp{{number_format($lot->start_price)}}
                             </td>
                             <td>
                                 Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lot->id)->orderBy('bid_price','DESC')->first()) ? $ac->bid_price : 0,0,',','.') }}
@@ -92,7 +93,7 @@ Finestcarauction - Sell Lots
                                 </form>
                             </td>
                         </tr>
-                        @endif
+                        {{-- @endif --}}
                         @endforeach
                     </tbody>
                 </table>
@@ -143,28 +144,28 @@ Finestcarauction - Sell Lots
                         @enderror
                     </div>
                     <div class="row mb-3">
-                        <div class="col-sm-4">
-                            <label class="form-label">Min Price</label>
-                            <input type="text" class="form-control @error('min_price') is-invalid @enderror" name="min_price" value="{{ old('min_price') }}">
-                            @error('min_price')
+                        <div class="col-sm-6">
+                            <label class="form-label">Start Price</label>
+                            <input type="number" class="form-control @error('start_price') is-invalid @enderror" name="start_price" value="{{ old('start_price') }}">
+                            @error('start_price')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                             @enderror
                         </div>
-                        <div class="col-sm-4">
+                        {{-- <div class="col-sm-4">
                             <label class="form-label">Max Price</label>
-                            <input type="text" class="form-control @error('max_price') is-invalid @enderror" name="max_price" value="{{ old('max_price') }}">
+                            <input type="number" class="form-control @error('max_price') is-invalid @enderror" name="max_price" value="{{ old('max_price') }}">
                             @error('max_price')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                             @enderror
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="form-label">Buyout Price</label>
-                            <input type="text" class="form-control @error('buyout_price') is-invalid @enderror" name="buyout_price" value="{{ old('buyout_price') }}">
-                            @error('buyout_price')
+                        </div> --}}
+                        <div class="col-sm-6">
+                            <label class="form-label">Bid Increment</label>
+                            <input type="number" class="form-control @error('bid_increment') is-invalid @enderror" name="bid_increment" value="{{ old('bid_increment') }}">
+                            @error('bid_increment')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>

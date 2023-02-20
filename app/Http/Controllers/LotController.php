@@ -52,9 +52,9 @@ class LotController extends Controller
         $request->validate([
             'name' => 'required',
             'description' => 'required',
-            'min_price' => 'required',
-            'max_price' => 'required',
-            'buyout_price' => 'required',
+            'start_price' => 'required',
+            // 'max_price' => 'required',
+            'bid_increment' => 'required',
             'end_time' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -72,13 +72,13 @@ class LotController extends Controller
         Lot::create([
             'name' => $request->name,
             'description' => $request->description,
-            'min_price' => $request->min_price,
-            'max_price' => $request->max_price,
-            'buyout_price' => $request->buyout_price,
+            'start_price' => $request->start_price,
+            'final_price' => $request->start_price,
+            'bid_increment' => $request->bid_increment,
             'end_time' => $request->end_time,
             'image' => $profileImage,
             'category_id' => $request->category_id,
-            'user_id' => Auth::id(),
+            // 'user_id' => Auth::id(),
         ]);
 
         return redirect()->back()->with('success', 'Lots created successfully!');
@@ -92,32 +92,32 @@ class LotController extends Controller
      */
     public function show($id)
     {
-        // Ambil data lelang dari database
-        $auction = Auction::find($auction_id);
+        // // Ambil data lelang dari database
+        // $auction = Auction::find($auction_id);
 
-        // Periksa apakah lelang sudah berakhir
-        if ($auction->end_time < now()) {
+        // // Periksa apakah lelang sudah berakhir
+        // if ($auction->end_time < now()) {
 
-            // Ambil semua penawaran pada lelang ini
-            $bids = Bid::where('auction_id', $auction->id)->get();
+        //     // Ambil semua penawaran pada lelang ini
+        //     $bids = Bid::where('auction_id', $auction->id)->get();
 
-            // Urutkan penawaran dari nilai tertinggi ke terendah
-            $bids = $bids->sortByDesc('value');
+        //     // Urutkan penawaran dari nilai tertinggi ke terendah
+        //     $bids = $bids->sortByDesc('value');
 
-            // Ambil penawaran tertinggi
-            $winner = $bids->first();
+        //     // Ambil penawaran tertinggi
+        //     $winner = $bids->first();
 
-            // Simpan pemenang lelang ke database
-            $auction->winner_id = $winner->user_id;
-            $auction->save();
+        //     // Simpan pemenang lelang ke database
+        //     $auction->winner_id = $winner->user_id;
+        //     $auction->save();
 
-            // Lakukan tindakan lain, misalnya mengirim email ke pemenang lelang dan pengguna lainnya
+        //     // Lakukan tindakan lain, misalnya mengirim email ke pemenang lelang dan pengguna lainnya
 
-        } else {
+        // } else {
 
-            // Lelang masih berjalan, lakukan tindakan lain yang diperlukan
+        //     // Lelang masih berjalan, lakukan tindakan lain yang diperlukan
 
-        }
+        // }
 
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $lots = Lot::where('id', $id)->first();

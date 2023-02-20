@@ -26,6 +26,11 @@ class BidController extends Controller
             'user_id' => Auth::id(),
         ]);
 
+        Lot::where('id' ,$lot_id)->update([
+            'final_price' => $request->bid_price,
+            'user_id' => Auth::id(),
+        ]);
+
         // dd($bid);
         // Bid::create($bid);
 

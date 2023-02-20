@@ -22,18 +22,29 @@ Finestcarauction - {{$lots->name}}
                                 <div class="row">
                                     <span class="h1 classic fw-semibold d-block mb-5 lots-name">{{$lots->name}}</span>
                                     <div class="col">
-                                        <span class="h4 text-muted fw-light d-block mb-2">Estimate:</span>
+                                        <span class="h4 text-muted fw-light d-block mb-2">Start price:</span>
+                                        <span class="h4 fw-normal d-block mt-1 mb-5">Bid increment:</span>
                                     </div>
                                     <div class="col text-end">
-                                        <span class="h4 text-muted fw-light d-block mb-2">Rp{{number_format($lots->min_price)}} - Rp{{number_format($lots->max_price)}}</span>
+                                        <span class="h4 text-muted fw-light d-block mb-2">Rp{{number_format($lots->start_price)}}</span>
+                                        <span class="h4 fw-normal d-block mt-1 mb-5">Rp{{number_format($lots->bid_increment)}}</span>
                                     </div>
                                     <hr>
                                     <div class="col">
+                                        <span class="h6 text-muted fw-light d-block mt-1 mb-1">Number of bids:</span>
                                         <span class="h3 fw-normal f-block">Current bid:</span>
-                                        <span class="h6 text-muted fw-light d-block mt-1 mb-5">(0 bids)</span>
+                                        <span class="h6 text-muted fw-light d-block mt-1 mb-5">Highest bids user:</span>
                                     </div>
                                     <div class="col text-end">
+                                        <span class="h6 text-muted fw-light d-block mt-1 mb-1">{{ $lots->bid->count() }} bids</span>
                                         <span class="h3 fw-normal f-block mb-0">Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lots->id)->orderBy('bid_price','DESC') ->first()) ? $ac->bid_price : 0,0,',','.') }}</span>
+                                        <span class="h6 text-muted fw-light d-block mt-1 mb-5">
+                                            @if ($lots->user_id === 0)
+                                            No one bid yet
+                                            @else
+                                            {{ $lots->user->name }}
+                                            @endif
+                                        </span>
                                     </div>
                                     <hr style="clear:both; visibility:hidden; padding: 0px; margin: 0px;">
                                     <div class="col">
@@ -63,11 +74,11 @@ Finestcarauction - {{$lots->name}}
                                             <p class="text-center">Bid</p>
                                         </button>
                                     @endif
-                                    @if ($user_tertinggi = DB::table('bids')->orderBy('bid_price', 'desc')->first())
+                                    {{-- @if ($user_tertinggi = DB::table('bids')->orderBy('bid_price', 'desc')->first())
                                         <button type="button" class="btn text-center w-100 blue-800 mt-5" data-bs-toggle="modal" data-bs-target="#BidModal">
                                             <p class="text-center">Buy</p>
                                         </button>
-                                    @endif
+                                    @endif --}}
                                 </div>
                             </div>
                         </div>
@@ -101,7 +112,20 @@ Finestcarauction - {{$lots->name}}
                 <div class="modal-body">
                     <div class="row mb-3">
                         <label class="form-label">New Bid</label>
-                        <input type="text" class="form-control" name="bid_price">
+                        <input type="number" class="form-control" name="bid_price" min="{{ $lots->final_price + $lots->bid_increment }}" value="{{ $lots->final_price + $lots->bid_increment }}" step="{{ $lots->bid_increment }}">
+                        <span class="h6 text-muted fw-light mt-2">
+                            <i>
+                            @if ($lots->final_price === 0)
+                                Bid must be greater than Rp{{ number_format($lots->start_price) }} 
+                                <br>
+                                and Incremented by Rp{{ number_format($lots->bid_increment) }}
+                            @else
+                                Bid must be greater than Rp{{ number_format($lots->final_price) }} 
+                                <br>
+                                and Incremented by Rp{{ number_format($lots->bid_increment) }}
+                            @endif
+                            </i>
+                        </span>
                     </div>
                 </div>
                 <div class="modal-footer">

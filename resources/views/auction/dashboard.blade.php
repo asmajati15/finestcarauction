@@ -51,7 +51,7 @@ Finestcarauction
                                 </div>
                                 <div class="mt-5">
                                     <span class="h4 classic fw-semibold d-block mb-2 lot-name lots-name">{{$lot->name}}</span>
-                                    <span class="h6 text-muted fw-light d-block mb-2">Estimate: Rp{{number_format($lot->min_price)}} - Rp{{number_format($lot->max_price)}}</span>
+                                    <span class="h6 text-muted fw-light d-block mb-2">Starts from: Rp{{number_format($lot->start_price)}}</span>
                                     <span class="h5 fw-normal f-block mb-0">Current bid: Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lot->id)->orderBy('bid_price','DESC')->first()) ? $ac->bid_price : 0,0,',','.') }}</span>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@ Finestcarauction
                                         <span class="seconds1"></span>
                                     </span>
                                 </span>
-                                <span class="text-nowrap text-xs text-muted">{{$lot->user->name}}</span>
+                                {{-- <span class="text-nowrap text-xs text-muted">{{$lot->user->name}}</span> --}}
                             </div>
                             <div class="mt-2 mb-0 text-sm">
                                 @if ($lot->end_time <= $current_time)
