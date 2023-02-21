@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lot;
 use App\Models\User;
+use App\Models\Bid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -92,35 +93,36 @@ class LotController extends Controller
      */
     public function show($id)
     {
-        // Ambil data lelang dari database
-        $auction = Auction::find($auction_id);
+        // $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
+        // // Ambil data lelang dari database
+        // $lots = Lot::where('id', $id)->first();
 
-        // Periksa apakah lelang sudah berakhir
-        if ($auction->end_time < now()) {
+        // // Periksa apakah lelang sudah berakhir
+        // if ($lots->end_time < $current_time) {
 
-            // Ambil semua penawaran pada lelang ini
-            $bids = Bid::where('auction_id', $auction->id)->get();
+        //     // Ambil semua penawaran pada lelang ini
+        //     $bids = Bid::where('lot_id', $lots->id)->get();
 
-            // Urutkan penawaran dari nilai tertinggi ke terendah
-            $bids = $bids->sortByDesc('value');
+        //     // Urutkan penawaran dari nilai tertinggi ke terendah
+        //     $bids = $bids->sortByDesc('value');
 
-            // Ambil penawaran tertinggi
-            $winner = $bids->first();
+        //     // Ambil penawaran tertinggi
+        //     $winner = $bids->first();
 
-            // Simpan pemenang lelang ke database
-            $auction->winner_id = $winner->user_id;
-            $auction->save();
+        //     // Simpan pemenang lelang ke database
+        //     $lots->winner_id = $winner->user_id;
+        //     $lots->save();
 
-            // Lakukan tindakan lain, misalnya mengirim email ke pemenang lelang dan pengguna lainnya
+        //     // Lakukan tindakan lain, misalnya mengirim email ke pemenang lelang dan pengguna lainnya
+        //     return view('auction.detail', compact('lots','current_time'));
+        // } else {
 
-        } else {
-
-            // Lelang masih berjalan, lakukan tindakan lain yang diperlukan
-
-        }
+        //     // Lelang masih berjalan, lakukan tindakan lain yang diperlukan
+        //     return response()->view(404);
+        // }
 
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
-        $lots = Lot::where('id', $id)->first();
+        $lots = Lot::where('id', $id)->with('bid')->first();
         if ($lots) {
             return view('auction.detail', compact('lots','current_time'));
         } else {

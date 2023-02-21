@@ -30,10 +30,17 @@ Finestcarauction - {{$lots->name}}
                                     <hr>
                                     <div class="col">
                                         <span class="h3 fw-normal f-block">Current bid:</span>
-                                        <span class="h6 text-muted fw-light d-block mt-1 mb-5">(0 bids)</span>
+                                        <span class="h6 text-muted fw-light d-block mt-1 mb-5">({{$lots->bid->count()}} bids)</span>
                                     </div>
                                     <div class="col text-end">
                                         <span class="h3 fw-normal f-block mb-0">Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lots->id)->orderBy('bid_price','DESC') ->first()) ? $ac->bid_price : 0,0,',','.') }}</span>
+                                        <span class="h6 text-muted fw-light d-block mt-1 mb-5">
+                                            @if($lots->id_user === 0)
+                                            Not yet bid
+                                            @else
+                                            {{$lots->user->name}}
+                                            @endif
+                                        </span>
                                     </div>
                                     <hr style="clear:both; visibility:hidden; padding: 0px; margin: 0px;">
                                     <div class="col">
@@ -63,11 +70,11 @@ Finestcarauction - {{$lots->name}}
                                             <p class="text-center">Bid</p>
                                         </button>
                                     @endif
-                                    @if ($user_tertinggi = DB::table('bids')->orderBy('bid_price', 'desc')->first())
+                                    {{-- @if ($user_tertinggi = DB::table('bids')->orderBy('bid_price', 'desc')->first())
                                         <button type="button" class="btn text-center w-100 blue-800 mt-5" data-bs-toggle="modal" data-bs-target="#BidModal">
                                             <p class="text-center">Buy</p>
                                         </button>
-                                    @endif
+                                    @endif --}}
                                 </div>
                             </div>
                         </div>
@@ -101,7 +108,11 @@ Finestcarauction - {{$lots->name}}
                 <div class="modal-body">
                     <div class="row mb-3">
                         <label class="form-label">New Bid</label>
-                        <input type="text" class="form-control" name="bid_price">
+                        {{-- @if ($lots->bid->) --}}
+                        {{-- <input type="text" class="form-control" name="bid_price" min="{{$lots->bid->bid_price + 1}}"> --}}
+                        {{-- @else --}}
+                            
+                        {{-- @endif --}}
                     </div>
                 </div>
                 <div class="modal-footer">
