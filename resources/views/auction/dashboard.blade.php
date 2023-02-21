@@ -16,22 +16,25 @@ Finestcarauction
                         <h1 class="h2 mb-0 ls-tight">Dashboard</h1>
                     </div>
                     <!-- Actions -->
-                    {{-- <div class="col-sm-6 col-12 text-sm-end">
+                    <div class="col-sm-6 col-12 text-sm-end">
                         <div class="mx-n1">
-                            <a href="#" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
-                                <span class=" pe-2">
-                                    <i class="bi bi-pencil"></i>
-                                </span>
-                                <span>Edit</span>
-                            </a>
-                            <button type="button" class="btn d-inline-flex btn-sm blue-800 mx-1" data-bs-toggle="modal" data-bs-target="#AddModal">
-                                <span class=" pe-2">
-                                    <i class="bi bi-plus"></i>
-                                </span>
-                                <span>Create</span>
-                            </button>
+                            <form action="{{ route('lot.index') }}" method="GET" role="search">
+                                <div class="input-group mb-3">
+                                    <a href="">
+                                        <button class="btn btn-outline-info" type="submit" title="Search projects">
+                                            <span class="bi bi-search"></span>
+                                        </button>
+                                    </a>
+                                    <input type="text" class="form-control mr-2" name="q" placeholder="Search lot" id="q">
+                                    <a href="{{ route('lot.index') }}">
+                                        <button class="btn btn-outline-danger" type="button" title="Refresh page">
+                                            <span class="bi bi-arrow-clockwise"></span>
+                                        </button>
+                                    </a>
+                                </div>
+                            </form>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,7 +49,7 @@ Finestcarauction
                     <div class="card shadow border-0">
                         <div class="card-body">
                             <div class="row">
-                                <div class="">
+                                <div class="" sty>
                                     <img class="rounded-2" src="/lot-images/{{ $lot->image }}" alt="">
                                 </div>
                                 <div class="mt-5">
@@ -73,9 +76,15 @@ Finestcarauction
                             </div>
                             <div class="mt-2 mb-0 text-sm">
                                 @if ($lot->end_time <= $current_time)
+                                    @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
+                                    <button type="button" class="btn btn-outline-success text-center w-100">
+                                        <p class="text-center">Pay</p>
+                                    </button>
+                                    @else
                                     <button type="button" class="btn btn-outline-secondary text-center w-100" disabled>
                                         <p class="text-center">Bid Ends</p>
                                     </button>
+                                    @endif
                                 @else
                                     <a href="{{ url('lot',$lot->id)}}" class="btn text-center w-100 blue-800">
                                         <p class="text-center">Bid</p>

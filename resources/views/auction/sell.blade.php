@@ -47,7 +47,7 @@ Finestcarauction - Sell Lots
                             <th scope="col">Bid Created</th>
                             <th scope="col">Bid End</th>
                             <th scope="col">Status</th>
-                            <th></th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -39,7 +39,7 @@ Finestcarauction - {{$lots->name}}
                                         <span class="h6 text-muted fw-light d-block mt-1 mb-1">{{ $lots->bid->count() }} bids</span>
                                         <span class="h3 fw-normal f-block mb-0">Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lots->id)->orderBy('bid_price','DESC') ->first()) ? $ac->bid_price : 0,0,',','.') }}</span>
                                         <span class="h6 text-muted fw-light d-block mt-1 mb-5">
-                                            @if ($lots->user_id === 0)
+                                            @if ($lots->user_id === NULL)
                                             No one bid yet
                                             @else
                                             {{ $lots->user->name }}
@@ -66,9 +66,15 @@ Finestcarauction - {{$lots->name}}
 
                                     {{-- @dd($lots->end_time,$current_time,Date(strtotime($current_time)) < Date(strtotime($lots->end_time))) --}}
                                     @if ($lots->end_time <= $current_time)
+                                        @if (DB::table('bids')->select('user_id')->where('lot_id',$lots->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
+                                        <button type="button" class="btn btn-outline-success text-center w-100 mt-5">
+                                            <p class="text-center">Pay</p>
+                                        </button>
+                                        @else
                                         <button type="button" class="btn btn-outline-secondary text-center w-100 mt-5" disabled>
                                             <p class="text-center">Bid Ends</p>
                                         </button>
+                                        @endif
                                     @else
                                         <button type="button" class="btn text-center w-100 blue-800 mt-5" data-bs-toggle="modal" data-bs-target="#BidModal">
                                             <p class="text-center">Bid</p>

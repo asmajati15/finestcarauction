@@ -15,12 +15,27 @@ class LotController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // date_                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  default_timezone_set('Jakarta');
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
-        $lots = Lot::with('user')->get();
-        return view('auction.dashboard', compact('lots','current_time'));
+
+        if(isset($_GET['q'])){
+            $lots = Lot::with('user')->where('name', 'Like', '%' . $_GET['q'] . '%')->get();
+        }
+        else{
+        // date_                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    default_timezone_set('Jakarta');
+            $lots = Lot::with('user')->get();
+        }
+        return view('auction.dashboard', compact('lots','current_time'))->with('i', (request()->input('page',1)*5));
+    }
+
+    public function searchByName(Request $request)
+    {
+        $name = $request->input('name');
+
+        $users = User::where('name', 'like', '%'.$name.'%')->get();
+
+        return view('user.index', ['users' => $users]);
     }
 
     public function sell()
@@ -92,32 +107,6 @@ class LotController extends Controller
      */
     public function show($id)
     {
-        // // Ambil data lelang dari database
-        // $auction = Auction::find($auction_id);
-
-        // // Periksa apakah lelang sudah berakhir
-        // if ($auction->end_time < now()) {
-
-        //     // Ambil semua penawaran pada lelang ini
-        //     $bids = Bid::where('auction_id', $auction->id)->get();
-
-        //     // Urutkan penawaran dari nilai tertinggi ke terendah
-        //     $bids = $bids->sortByDesc('value');
-
-        //     // Ambil penawaran tertinggi
-        //     $winner = $bids->first();
-
-        //     // Simpan pemenang lelang ke database
-        //     $auction->winner_id = $winner->user_id;
-        //     $auction->save();
-
-        //     // Lakukan tindakan lain, misalnya mengirim email ke pemenang lelang dan pengguna lainnya
-
-        // } else {
-
-        //     // Lelang masih berjalan, lakukan tindakan lain yang diperlukan
-
-        // }
 
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $lots = Lot::where('id', $id)->first();
