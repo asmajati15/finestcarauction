@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Lot;
 use App\Models\User;
+use App\Models\Bid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 use Carbon\Carbon;
 
 class LotController extends Controller
@@ -42,8 +45,30 @@ class LotController extends Controller
     {
         // date_                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  default_timezone_set('Jakarta');
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
-        $lots = Lot::get();
+        $lots = Lot::with('user')->get();
         return view('auction.sell', compact('lots','current_time'));
+    }
+
+    public function open(Request $request, $id)
+    {
+        // $input = $request->all();
+        Lot::where('id', $id)->update([
+            'status' => $request->status,
+            'end_time' => $request->end_time,
+        ]);
+
+        return redirect()->back()->with('success', 'Status updated successfully!');
+    }
+
+    public function close(Request $request, $id)
+    {
+        // $input = $request->all();
+        Lot::where('id', $id)->update([
+            'status' => $request->status,
+            'end_time' => Carbon::now('Asia/Jakarta'),
+        ]);
+
+        return redirect()->back()->with('success', 'Status updated successfully!');
     }
 
     /**
@@ -68,7 +93,6 @@ class LotController extends Controller
             'name' => 'required',
             'description' => 'required',
             'start_price' => 'required',
-            // 'max_price' => 'required',
             'bid_increment' => 'required',
             'end_time' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
@@ -140,14 +164,13 @@ class LotController extends Controller
         $request->validate([
             'name' => 'required',
             'description' => 'required',
-            'min_price' => 'required',
-            'max_price' => 'required',
-            'buyout_price' => 'required',
+            'start_price' => 'required',
+            'bid_increment' => 'required',
             'end_time' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            // 'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $input = $request->except(['_token', '_method' ]);
+        // $input = $request->except(['_token', '_method' ]);
 
         if ($image = $request->file('image')) {
             $destinationPath = 'lot-images/';
@@ -159,7 +182,6 @@ class LotController extends Controller
         }
 
         Lot::where('id', $lot)->update($input);
-        // dd($input);
 
         return redirect()->back()->with('success', 'Lots updated successfully!');
     }
@@ -173,25 +195,23 @@ class LotController extends Controller
     public function destroy(Lot $lot, $id)
     {
         $lot = Lot::find($id);
+        // $bid = Bid::find($lot->id);
 
         if ($lot) {
-            // Hapus gambar dari folder public
             $imagePath = public_path('lot-images/' . $lot->image);
             if (file_exists($imagePath)) {
                 unlink($imagePath);
             }
 
-            // Hapus field dari database
-            $lot->where('id', $id)->delete();
+                $lot->where('id', $id)->delete();
+                // $bid->where('lot_id', $id)->delete();
 
             return redirect()->back()->with('success', 'Lots deleted successfully!');
+
         } else {
+
             return redirect()->back()->with('error', 'Lots deleted failed!');
+
         }
-
-
-        // $lot->where('id', $id)->delete();
-     
-        // return redirect()->route('lot.sell')->with('success','Product deleted successfully');
     }
 }

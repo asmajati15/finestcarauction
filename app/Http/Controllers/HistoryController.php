@@ -7,24 +7,26 @@ use App\Models\User;
 use App\Models\Lot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response as FacadeResponse;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class HistoryController extends Controller
 {
     public function index() {
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
-        $a = Auth::id();
-        $b = Bid::where('user_id', $a)->pluck('lot_id');
-        $d = User::where('id', $a)->value('name');
-        // $c = Lot::whereIn('id', $b)->where('end_time' ,'<=',Carbon::now('Asia/Jakarta'))->get();
-        $c = Lot::whereIn('id', $b)->get();
-        // $c = Lot::with('user')->get();
-        $ca = Lot::whereNotIn('id', $b)->get();
-        return view('auction.history', [
-            'c' => $c ,
-            'ca' => $ca,
-            'nama' => $d,
-            'current_time' => $current_time,
-        ]);
+        $auth_user = Auth::id();
+        $bid = Bid::where('user_id', $auth_user)->pluck('lot_id');
+        $lots = Lot::whereIn('id', $bid)->get();
+        $lots2 = Lot::whereNotIn('id', $bid)->get();
+        return view('auction.history', compact('lots','lots2','current_time'));
+    }
+
+    public function invoice($id) {
+        $lots = Lot::where('id', $id)->first();
+
+        $pdf = PDF::loadView('auction/invoice', compact('lots'));
+        
+        return $pdf->download('finestcarauction-invoice.pdf');
     }
 }

@@ -56,6 +56,7 @@ Finestcarauction
                                     <span class="h4 classic fw-semibold d-block mb-2 lot-name lots-name">{{$lot->name}}</span>
                                     <span class="h6 text-muted fw-light d-block mb-2">Starts from: Rp{{number_format($lot->start_price)}}</span>
                                     <span class="h5 fw-normal f-block mb-0">Current bid: Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lot->id)->orderBy('bid_price','DESC')->first()) ? $ac->bid_price : 0,0,',','.') }}</span>
+                                    {{-- <span class="h5 fw-normal f-block mb-0">Current bid: Rp{{number_format($lot->final_price) }}</span> --}}
                                 </div>
                             </div>
                             <div class="mt-2 mb-0 text-sm">
@@ -76,7 +77,8 @@ Finestcarauction
                             </div>
                             <div class="mt-2 mb-0 text-sm">
                                 @if ($lot->end_time <= $current_time)
-                                    @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
+                                    {{-- @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id()) --}}
+                                    @if ($lot->user_id==Auth::id())
                                     <button type="button" class="btn btn-outline-success text-center w-100">
                                         <p class="text-center">Pay</p>
                                     </button>

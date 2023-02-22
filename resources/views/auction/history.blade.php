@@ -32,32 +32,32 @@ Finestcarauction - History
                             <tr>
                                 <th scope="col">Item Name</th>
                                 <th scope="col">Bid End</th>
-                                <th scope="col">Highest Bid User</th>
+                                <th scope="col">Bid Winner</th>
                                 <th scope="col">Highest Bid</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($c as $item)
+                            @foreach ($lots as $lot)
                                 
                             <tr>
                                 <td>
-                                    <img alt="{{$item->name}}" src="/lot-images/{{ $item->image }}" class="avatar avatar-sm rounded-circle me-2">
-                                    <a class="text-heading font-semibold" href="#"> {{$item->name}} </a>
+                                    <img alt="{{$lot->name}}" src="/lot-images/{{ $lot->image }}" class="avatar avatar-sm rounded-circle me-2">
+                                    <a class="text-heading font-semibold" href="#"> {{$lot->name}} </a>
                                 </td>
                                 <td>
-                                    {{date('d M Y, h:m A e', strtotime($item->end_time));}}
+                                    {{date('d M Y, h:m A e', strtotime($lot->end_time));}}
                                 </td>
                                 <td>
-                                    {{$item->user->name}}
+                                    {{$lot->user->name}}
                                 </td>
                                 <td>
-                                    Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$item->id)->orderBy('bid_price','DESC')->first()) ? $ac->bid_price : 0,0,',','.') }}
+                                    Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lot->id)->orderBy('bid_price','DESC')->first()) ? $ac->bid_price : 0,0,',','.') }}
                                 </td>
                                 <td>
-                                    @if ($item->end_time <= $current_time)
-                                        @if (DB::table('bids')->select('user_id')->where('lot_id',$item->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
+                                    @if ($lot->end_time <= $current_time)
+                                        @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
                                             <span class="badge badge-pill bg-soft-success text-success me-2">
                                                 <span>Win</span>
                                             </span>
@@ -73,8 +73,9 @@ Finestcarauction - History
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($item->end_time <= $current_time)
-                                        @if (DB::table('bids')->select('user_id')->where('lot_id',$item->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
+                                    @if ($lot->end_time <= $current_time)
+                                        @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
+                                        <a href="{{ route('bid.invoice',$lot->id) }}" class="btn btn-sm btn-outline-primary">Invoice</a>
                                         <button type="button" class="btn btn-sm btn-outline-success">Pay</button>
                                         @else
                                         <button type="button" class="btn btn-sm btn-outline-secondary" disabled>You Lose</button>
@@ -102,32 +103,32 @@ Finestcarauction - History
                             <tr>
                                 <th scope="col">Item Name</th>
                                 <th scope="col">Bid End</th>
-                                <th scope="col">Highest Bid User</th>
+                                <th scope="col">Bid Winner</th>
                                 <th scope="col">Highest Bid</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($ca as $item)
-                                @if ($item->user_id != NULL)
+                            @foreach ($lots2 as $lot)
+                                @if ($lot->user_id != NULL)
                             <tr>
                                 <td>
-                                    <img alt="{{$item->name}}" src="/lot-images/{{ $item->image }}" class="avatar avatar-sm rounded-circle me-2">
-                                    <a class="text-heading font-semibold" href="#"> {{$item->name}} </a>
+                                    <img alt="{{$lot->name}}" src="/lot-images/{{ $lot->image }}" class="avatar avatar-sm rounded-circle me-2">
+                                    <a class="text-heading font-semibold" href="{{ route('lot.show',$lot->id) }}"> {{$lot->name}} </a>
                                 </td>
                                 <td>
-                                    {{date('d M Y, h:m A e', strtotime($item->end_time));}}
+                                    {{date('d M Y, h:m A e', strtotime($lot->end_time));}}
                                 </td>
                                 <td>
-                                    {{$item->user->name}}
+                                    {{$lot->user->name}}
                                 </td>
                                 <td>
-                                    Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$item->id)->orderBy('bid_price','DESC')->first()) ? $ac->bid_price : 0,0,',','.') }}
+                                    Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lot->id)->orderBy('bid_price','DESC')->first()) ? $ac->bid_price : 0,0,',','.') }}
                                 </td>
                                 <td>
-                                    @if ($item->end_time <= $current_time)
-                                        @if (DB::table('bids')->select('user_id')->where('lot_id',$item->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
+                                    @if ($lot->end_time <= $current_time)
+                                        @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
                                             <span class="badge badge-pill bg-soft-success text-success me-2">
                                                 <span>Win</span>
                                             </span>
@@ -143,8 +144,8 @@ Finestcarauction - History
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($item->end_time <= $current_time)
-                                        @if (DB::table('bids')->select('user_id')->where('lot_id',$item->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
+                                    @if ($lot->end_time <= $current_time)
+                                        @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
                                         <button type="button" class="btn btn-sm btn-outline-success">Pay</button>
                                         @else
                                         <button type="button" class="btn btn-sm btn-outline-secondary" disabled>You Lose</button>

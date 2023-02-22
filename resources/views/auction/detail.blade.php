@@ -197,17 +197,5 @@ Finestcarauction - {{$lots->name}}
             }, 1000);
         }
     });
-
-    $(document).ready(function () {
-    $("#expandbtn").click(function () {
-        if ($("#portfolio").hasClass("readmore")) {
-        $("#expandbtn").html("Read More");
-        $("#portfolio").removeClass("readmore");
-        } else {
-        $("#expandbtn").html("Read Less");
-        $("#portfolio").addClass("readmore");
-        }
-    });
-    });
 </script>
 @endsection

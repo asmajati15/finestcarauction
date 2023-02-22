@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/lot', [LotController::class, 'index'])->name('lot.index');
     Route::get('/sell', [LotController::class, 'sell'])->name('lot.sell');
+    Route::post('/close/{lot_id}', [LotController::class, 'close'])->name('lot.close');
+    Route::post('/open/{lot_id}', [LotController::class, 'open'])->name('lot.open');
     Route::post('/lot', [LotController::class,'store'])->name('lot.store');
     Route::get('/lot/{lot_id}', [LotController::class, 'show'])->name('lot.show');
     Route::put('/lot/{lot_id}', [LotController::class, 'update'])->name('lot.update');
@@ -38,6 +40,10 @@ Route::middleware('auth')->group(function () {
     // Route::resource('/lot', LotController::class);
     Route::post('/bid/{lot_id}', [BidController::class, 'newBid'])->name('bid.new');
     Route::get('/history', [HistoryController::class, 'index'])->name('bid.history');
+    Route::get('/history/invoice/{lot_id}', [HistoryController::class, 'invoice'])->name('bid.invoice');
+    Route::get('/invoice', function () {
+        return view('auction/invoice');
+    });
 });
 
 require __DIR__.'/auth.php';
