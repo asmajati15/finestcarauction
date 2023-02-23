@@ -128,7 +128,7 @@ class LotController extends Controller
     {
 
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
-        $lots = Lot::where('id', $id)->first();
+        $lots = Lot::where('id', $id)->with('bid')->first();
         if ($lots) {
             return view('auction.detail', compact('lots','current_time'));
         } else {

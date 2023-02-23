@@ -34,6 +34,7 @@ Finestcarauction - {{$lots->name}}
                                         <span class="h6 text-muted fw-light d-block mt-1 mb-1">Number of bids:</span>
                                         <span class="h3 fw-normal f-block">Current bid:</span>
                                         <span class="h6 text-muted fw-light d-block mt-1 mb-5">Highest bids user:</span>
+
                                     </div>
                                     <div class="col text-end">
                                         <span class="h6 text-muted fw-light d-block mt-1 mb-1">{{ $lots->bid->count() }} bids</span>

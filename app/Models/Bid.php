@@ -20,6 +20,7 @@ class Bid extends Model
     protected $guarded = ['id']; 
 
     public function lot(){
+
         return $this->belongsTo(Lot::class, 'lot_id');
     }
 }
