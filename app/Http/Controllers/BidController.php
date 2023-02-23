@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class BidController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function newBid(Request $request, $lot_id)
     {
         $request->validate([
@@ -23,6 +28,11 @@ class BidController extends Controller
         Bid::create([
             'bid_price' => $request->bid_price,
             'lot_id' => $lot_id,
+            'user_id' => Auth::id(),
+        ]);
+
+        Lot::where('id' ,$lot_id)->update([
+            'final_price' => $request->bid_price,
             'user_id' => Auth::id(),
         ]);
 

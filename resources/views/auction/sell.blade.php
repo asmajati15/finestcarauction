@@ -13,7 +13,7 @@ Finestcarauction - Sell Lots
                 <div class="row align-items-center">
                     <div class="col-sm-6 col-12 mb-4 mb-sm-0">
                         <!-- Title -->
-                        <h1 class="h2 mb-0 ls-tight">Sell Lot</h1>
+                        <h1 class="h2 mb-0 ls-tight">Sell Lots</h1>
                     </div>
                     <!-- Actions -->
                     <div class="col-sm-6 col-12 text-sm-end">
@@ -35,7 +35,7 @@ Finestcarauction - Sell Lots
         <div class="container-fluid">
             <div class="card shadow border-0 mb-7">
             <div class="card-header">
-                <h5 class="mb-0">Applications</h5>
+                <h5 class="mb-0">Lot Items</h5>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover table-nowrap">
@@ -44,55 +44,88 @@ Finestcarauction - Sell Lots
                             <th scope="col">Item Name</th>
                             <th scope="col">Start Price</th>
                             <th scope="col">Current Bid</th>
-                            <th scope="col">Bid Created</th>
+                            {{-- <th scope="col">Bid Created</th> --}}
                             <th scope="col">Bid End</th>
+                            <th scope="col">Bid Winner</th>
                             <th scope="col">Status</th>
-                            <th></th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($lots as $lot)
-                        @if (auth()->user()->id == $lot->user_id)
+                        {{-- @if ($lot->user->level == 0) --}}
+                        {{-- @if (auth()->user()->id == $lot->user_id) --}}
                         
                         {{-- @dd($lot) --}}
                         {{-- @dd(DB::table('bids')->where('lot_id',5)->orderBy('bid_price','DESC')->get()) --}}
                         <tr>
                             <td>
                                 <img alt="{{$lot->name}}" src="/lot-images/{{ $lot->image }}"  class="avatar avatar-sm rounded-circle me-2">
-                                <a class="text-heading font-semibold" href="{{ route('lot.show',$lot->id) }}"> {{$lot->name}} </a>
+                                <a class="text-heading font-semibold" href="{{ route('lot.show',$lot->id) }}" style="display: inline-block; width: 250px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"> {{$lot->name}} </a>
                             </td>
                             <td>
-                                Rp{{number_format($lot->min_price)}}
+                                Rp{{number_format($lot->start_price)}}
                             </td>
                             <td>
                                 Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lot->id)->orderBy('bid_price','DESC')->first()) ? $ac->bid_price : 0,0,',','.') }}
                             </td>
-                            <td>
+                            {{-- <td>
                                 {{date('d M Y, h:m A e', strtotime($lot->created_at));}}
-                            </td>
+                            </td> --}}
                             <td>
                                 {{date('d M Y, h:m A e', strtotime($lot->end_time));}}
                             </td>
                             <td>
-                                <span class="badge badge-pill bg-soft-danger text-danger me-2">
-                                    <span>Sold</span>
-                                </span>
+                                @if ($lot->user_id === NULL)
+                                    <span class="text-danger">No one bid yet</span> 
+                                @else
+                                    {{ $lot->user->name }}
+                                @endif
+                            </td>
+                            <td>
+                                @if ($lot->status === 0)    
+                                    <span class="badge badge-pill bg-soft-danger text-danger me-2">
+                                        <span>Ends</span>
+                                    </span>
+                                @else
+                                    <span class="badge badge-pill bg-soft-primary text-primary me-2">
+                                        <span>On Progress</span>
+                                    </span>
+                                @endif
                             </td>
                             <td class="text-end"> 
                                 {{-- <a class="btn btn-primary" href="{{ route('lot.edit',$lot->id) }}">Edit</a> --}}
-                                <a class="btn btn-sm btn-square btn-neutral" data-bs-toggle="modal" data-bs-target="#UpdateModal" data-url="{{ route('lot.update',$lot->id) }}" data-name="{{ $lot->name }}" data-description="{{ $lot->description }}" data-min_price="{{ $lot->min_price }}" data-max_price="{{ $lot->max_price }}" data-buyout_price="{{ $lot->buyout_price }}">
+                                @if ($lot->status === 0)   
+                                    {{-- <form action="{{ route('lot.open',$lot->id) }}" method="POST" class="d-inline-block">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-outline-primary" name="status" value="1">
+                                            Open
+                                        </button> --}}
+                                        <a class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#OpenModal">
+                                            Open
+                                        </a>
+                                    {{-- </form> --}}
+                                @else
+                                    <form action="{{ route('lot.close',$lot->id) }}" method="POST" class="d-inline-block">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-outline-warning" name="status" value="0" onclick="return confirm('Are you sure want to close this lot?')">
+                                            Close
+                                        </button>
+                                    </form>
+                                @endif
+                                <a class="btn btn-sm btn-square btn-outline-success" data-bs-toggle="modal" data-bs-target="#UpdateModal" data-url="{{ route('lot.update',$lot->id) }}" data-name="{{ $lot->name }}" data-description="{{ $lot->description }}" data-start_price="{{ $lot->start_price }}" data-bid_increment="{{ $lot->bid_increment }}" data-end_time="{{ $lot->end_time }}" data-image="/lot-images/{{ $lot->image }}">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <form action="{{ route('lot.destroy',$lot->id) }}" method="POST" class="d-inline-block">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-square btn-neutral" onclick="return confirm('Are you sure want to delete this lot?')">
+                                    <button type="submit" class="btn btn-sm btn-square btn-outline-danger" onclick="return confirm('Are you sure want to delete this lot?')">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
                             </td>
                         </tr>
-                        @endif
+                        {{-- @endif --}}
                         @endforeach
                     </tbody>
                 </table>
@@ -103,6 +136,36 @@ Finestcarauction - Sell Lots
             </div>
         </div>
     </main>
+</div>
+
+<div class="modal fade" id="OpenModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{{ route('lot.open',$lot->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Open this lot to auction</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                        <input type="hidden" name="status" value="1">
+                    <div class="row mb-3">
+                        <label class="form-label">End Time</label>
+                        <input type="datetime-local" class="form-control @error('end_time') is-invalid @enderror" id="end_time" name="end_time" value="{{ old('end_time') }}">
+                        @error('end_time')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <input type="submit" class="btn blue-800" name="save" value="Submit">
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="AddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -143,28 +206,28 @@ Finestcarauction - Sell Lots
                         @enderror
                     </div>
                     <div class="row mb-3">
-                        <div class="col-sm-4">
-                            <label class="form-label">Min Price</label>
-                            <input type="text" class="form-control @error('min_price') is-invalid @enderror" name="min_price" value="{{ old('min_price') }}">
-                            @error('min_price')
+                        <div class="col-sm-6">
+                            <label class="form-label">Start Price</label>
+                            <input type="number" class="form-control @error('start_price') is-invalid @enderror" name="start_price" value="{{ old('start_price') }}">
+                            @error('start_price')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                             @enderror
                         </div>
-                        <div class="col-sm-4">
+                        {{-- <div class="col-sm-4">
                             <label class="form-label">Max Price</label>
-                            <input type="text" class="form-control @error('max_price') is-invalid @enderror" name="max_price" value="{{ old('max_price') }}">
+                            <input type="number" class="form-control @error('max_price') is-invalid @enderror" name="max_price" value="{{ old('max_price') }}">
                             @error('max_price')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                             @enderror
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="form-label">Buyout Price</label>
-                            <input type="text" class="form-control @error('buyout_price') is-invalid @enderror" name="buyout_price" value="{{ old('buyout_price') }}">
-                            @error('buyout_price')
+                        </div> --}}
+                        <div class="col-sm-6">
+                            <label class="form-label">Bid Increment</label>
+                            <input type="number" class="form-control @error('bid_increment') is-invalid @enderror" name="bid_increment" value="{{ old('bid_increment') }}">
+                            @error('bid_increment')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -182,7 +245,12 @@ Finestcarauction - Sell Lots
                     </div>
                     <div class="row mb-3">
                         <label for="formFileMultiple" class="form-label">Image</label>
-                        <input class="form-control" type="file" id="formFileMultiple" multiple accept="image/*" name="image">
+                        <input class="form-control @error('image') is-invalid @enderror" type="file" id="formFileMultiple" multiple accept="image/*" name="image">
+                        @error('image')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -193,6 +261,13 @@ Finestcarauction - Sell Lots
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="UpdateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id="modal-content">
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -200,5 +275,99 @@ Finestcarauction - Sell Lots
     var today = new Date().toISOString().slice(0, 16);
 
     document.getElementsByName("end_time")[0].min = today;
+
+    $('#UpdateModal').on('shown.bs.modal', function(e) {
+        var html = `
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Lot Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="${$(e.relatedTarget).data('url')}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Name</label>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="${$(e.relatedTarget).data('name')}">
+                        @error('name')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" aria-label="Default select example" name="category_id">
+                            <option hidden>Select Category</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-control @error('description') is-invalid @enderror" name="description"  value="${$(e.relatedTarget).data('description')}">
+                        @error('description')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label">Start Price</label>
+                            <input type="number" class="form-control @error('start_price') is-invalid @enderror" name="start_price" value="${$(e.relatedTarget).data('start_price')}">
+                            @error('start_price')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label">Bid Increment</label>
+                            <input type="number" class="form-control @error('bid_increment') is-invalid @enderror" name="bid_increment" value="${$(e.relatedTarget).data('bid_increment')}">
+                            @error('bid_increment')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label">End Time</label>
+                        <input type="datetime-local" class="form-control @error('end_time') is-invalid @enderror" id="end_time" name="end_time" value="${$(e.relatedTarget).data('end_time')}">
+                        @error('end_time')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="row mb-3">
+                        <label for="formFileMultiple" class="form-label">Image</label>
+                        <input class="form-control" type="file" id="formFileMultiple" multiple accept="image/*" name="image" value="${$(e.relatedTarget).data('image')}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn blue-800">Submit</button
+                </div>
+            </form>
+            `;
+        $('#modal-content').html(html);
+    });
+
+    @if(session()->has('success'))
+    Swal.fire(
+    'Success',
+    '{{ session('success') }}',
+    'success'
+    )
+    @elseif(session()->has('error'))
+    Swal.fire(
+    'Something went wrong!',
+    '{{ session('error') }}.',
+    'error',
+    )
+    @endif
 </script>
 @endsection

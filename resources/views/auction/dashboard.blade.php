@@ -11,27 +11,22 @@ Finestcarauction
         <div class="container-fluid">
             <div class="mb-npx">
                 <div class="row align-items-center">
-                    <div class="col-sm-6 col-12 mb-4 mb-sm-0">
-                        <!-- Title -->
-                        <h1 class="h2 mb-0 ls-tight">Dashboard</h1>
-                    </div>
                     <!-- Actions -->
-                    {{-- <div class="col-sm-6 col-12 text-sm-end">
+                    <div class="col-sm-10 col-12 mx-auto">
                         <div class="mx-n1">
-                            <a href="#" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
-                                <span class=" pe-2">
-                                    <i class="bi bi-pencil"></i>
-                                </span>
-                                <span>Edit</span>
-                            </a>
-                            <button type="button" class="btn d-inline-flex btn-sm blue-800 mx-1" data-bs-toggle="modal" data-bs-target="#AddModal">
-                                <span class=" pe-2">
-                                    <i class="bi bi-plus"></i>
-                                </span>
-                                <span>Create</span>
-                            </button>
+                            <form action="{{ route('lot.index') }}" method="GET" role="search">
+                                <div class="input-group mb-3">
+                                    <button class="btn btn-primary" type="submit" title="Search">
+                                        <span class="bi bi-search"></span>
+                                    </button>
+                                    <input type="text" class="form-control mr-2" name="q" placeholder="Search lot items" id="q">
+                                    <a href="{{ route('lot.index') }}" class="btn btn-success" title="Refresh Page">
+                                        <span class="bi bi-arrow-clockwise"></span>
+                                    </a>
+                                </div>
+                            </form>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -39,6 +34,40 @@ Finestcarauction
     <!-- Main -->
     <main class="py-6 bg-surface-secondary">
         <div class="container-fluid">
+            <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <div class="carousel-item active" data-bs-interval="5000">
+                    <img src="{{ asset('image/slide1.jpg') }}" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h3 class="text-white">Authentic Items</h3>
+                        <p>Items auctioned are guaranteed 100% authentic.</p>
+                    </div>                
+                  </div>
+                  <div class="carousel-item" data-bs-interval="5000">
+                    <img src="{{ asset('image/slide2.jpg') }}" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h3 class="text-white">Easy to Bid</h3>
+                        <p>Grab your chance to own the authentic items.</p>
+                    </div> 
+                  </div>
+                  <div class="carousel-item" data-bs-interval="5000">
+                    <img src="{{ asset('image/slide3.jpg') }}" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <a href="{{ url('register') }}" class="btn blue-800 mx-1">Register Now!</a>
+                        <p>Before submit your best bid.</p>
+                    </div>
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <h2 class="mb-3 ls-tight pt-6 pb-2 text-center">All Auctions</h2>
             <!-- Card stats -->
             <div class="row g-6 mb-6 row-cols-3">
                 @foreach ($lots as $lot)
@@ -46,13 +75,14 @@ Finestcarauction
                     <div class="card shadow border-0">
                         <div class="card-body">
                             <div class="row">
-                                <div class="">
+                                <div class="" sty>
                                     <img class="rounded-2" src="/lot-images/{{ $lot->image }}" alt="">
                                 </div>
                                 <div class="mt-5">
                                     <span class="h4 classic fw-semibold d-block mb-2 lot-name lots-name">{{$lot->name}}</span>
-                                    <span class="h6 text-muted fw-light d-block mb-2">Estimate: Rp{{number_format($lot->min_price)}} - Rp{{number_format($lot->max_price)}}</span>
+                                    <span class="h6 text-muted fw-light d-block mb-2">Starts from: Rp{{number_format($lot->start_price)}}</span>
                                     <span class="h5 fw-normal f-block mb-0">Current bid: Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lot->id)->orderBy('bid_price','DESC')->first()) ? $ac->bid_price : 0,0,',','.') }}</span>
+                                    {{-- <span class="h5 fw-normal f-block mb-0">Current bid: Rp{{number_format($lot->final_price) }}</span> --}}
                                 </div>
                             </div>
                             <div class="mt-2 mb-0 text-sm">
@@ -69,13 +99,20 @@ Finestcarauction
                                         <span class="seconds1"></span>
                                     </span>
                                 </span>
-                                <span class="text-nowrap text-xs text-muted">{{$lot->user->name}}</span>
+                                {{-- <span class="text-nowrap text-xs text-muted">{{$lot->user->name}}</span> --}}
                             </div>
                             <div class="mt-2 mb-0 text-sm">
                                 @if ($lot->end_time <= $current_time)
+                                    {{-- @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id()) --}}
+                                    @if ($lot->user_id==Auth::id())
+                                    <button type="button" class="btn btn-outline-success text-center w-100">
+                                        <p class="text-center">Pay</p>
+                                    </button>
+                                    @else
                                     <button type="button" class="btn btn-outline-secondary text-center w-100" disabled>
                                         <p class="text-center">Bid Ends</p>
                                     </button>
+                                    @endif
                                 @else
                                     <a href="{{ url('lot',$lot->id)}}" class="btn text-center w-100 blue-800">
                                         <p class="text-center">Bid</p>

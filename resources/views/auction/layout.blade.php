@@ -35,6 +35,12 @@
             color: #fff;
         }
 
+        .carousel img {
+            height: 500px;
+            object-fit: cover;
+            background-repeat: no-repeat;
+        }
+
         .lot-name {
             display: block;
             width: 100%;
@@ -45,14 +51,6 @@
 
         .lots-name {
             text-transform: uppercase;
-        }
-
-        .outer{
-            height: 200px; overflow: hidden;
-        }
-        
-        .readmore{
-            height: auto !important;
         }
 
         @media(min-width: 1024px) {
@@ -114,7 +112,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('lot.sell')}}">
-                                <i class="bi bi-wallet"></i> Sell Item
+                                <i class="bi bi-wallet"></i> Sell Lots
                             </a>
                         </li>
                         <li class="nav-item">
@@ -132,11 +130,19 @@
                     <!-- Push content down -->
                     <div class="mt-auto"></div>
                     <!-- User (md) -->
-                    <ul class="navbar-nav user-setting">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('profile.edit') }}">
+                                <i class="bi bi-person-square"></i> {{ Auth::user()->name }}
                             </a>
                         </li>
-                        <li class="nav-item" style="margin-left: 7px;">
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="post">
+                                @csrf
+                                <button type="submit" class="nav-link" style="background-color: #fff">
+                                    <i class="bi bi-box-arrow-left"></i> Logout
+                                </button>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -149,6 +155,7 @@
     <!-- <script src="{{ mix('/js/app.js') }}"></script> -->
     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @yield('js')
 </body>
 

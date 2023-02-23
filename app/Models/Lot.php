@@ -30,7 +30,7 @@ class Lot extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function bid() {
-        return $this->hasMany(Bid::class);
+    public function bid(){
+        return $this->hasMany(Bid::class, 'lot_id');
     }
 }
