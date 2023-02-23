@@ -11,25 +11,17 @@ Finestcarauction
         <div class="container-fluid">
             <div class="mb-npx">
                 <div class="row align-items-center">
-                    <div class="col-sm-6 col-12 mb-4 mb-sm-0">
-                        <!-- Title -->
-                        <h1 class="h2 mb-0 ls-tight">Dashboard</h1>
-                    </div>
                     <!-- Actions -->
-                    <div class="col-sm-6 col-12 text-sm-end">
+                    <div class="col-sm-10 col-12 mx-auto">
                         <div class="mx-n1">
                             <form action="{{ route('lot.index') }}" method="GET" role="search">
                                 <div class="input-group mb-3">
-                                    <a href="">
-                                        <button class="btn btn-outline-info" type="submit" title="Search projects">
-                                            <span class="bi bi-search"></span>
-                                        </button>
-                                    </a>
-                                    <input type="text" class="form-control mr-2" name="q" placeholder="Search lot" id="q">
-                                    <a href="{{ route('lot.index') }}">
-                                        <button class="btn btn-outline-danger" type="button" title="Refresh page">
-                                            <span class="bi bi-arrow-clockwise"></span>
-                                        </button>
+                                    <button class="btn btn-primary" type="submit" title="Search">
+                                        <span class="bi bi-search"></span>
+                                    </button>
+                                    <input type="text" class="form-control mr-2" name="q" placeholder="Search lot items" id="q">
+                                    <a href="{{ route('lot.index') }}" class="btn btn-success" title="Refresh Page">
+                                        <span class="bi bi-arrow-clockwise"></span>
                                     </a>
                                 </div>
                             </form>
@@ -42,6 +34,40 @@ Finestcarauction
     <!-- Main -->
     <main class="py-6 bg-surface-secondary">
         <div class="container-fluid">
+            <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <div class="carousel-item active" data-bs-interval="5000">
+                    <img src="{{ asset('image/slide1.jpg') }}" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h3 class="text-white">Authentic Items</h3>
+                        <p>Items auctioned are guaranteed 100% authentic.</p>
+                    </div>                
+                  </div>
+                  <div class="carousel-item" data-bs-interval="5000">
+                    <img src="{{ asset('image/slide2.jpg') }}" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h3 class="text-white">Easy to Bid</h3>
+                        <p>Grab your chance to own the authentic items.</p>
+                    </div> 
+                  </div>
+                  <div class="carousel-item" data-bs-interval="5000">
+                    <img src="{{ asset('image/slide3.jpg') }}" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <a href="{{ url('register') }}" class="btn blue-800 mx-1">Register Now!</a>
+                        <p>Before submit your best bid.</p>
+                    </div>
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <h2 class="mb-3 ls-tight pt-6 pb-2 text-center">All Auctions</h2>
             <!-- Card stats -->
             <div class="row g-6 mb-6 row-cols-3">
                 @foreach ($lots as $lot)

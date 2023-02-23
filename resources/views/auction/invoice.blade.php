@@ -6,18 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Invoice of {{$lots->name}}</title>
 
-    <style>
+    <style>        
         body {
-            font-family: Arial, Helvetica, sans-serif;
+            font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         }
+
+        p {
+            font-size: 12px
+        }
+
         .header {
+            height: 100px;
+        }
+
+        .logo {
             width: 250px;
             height: 50px;
+            float: left;
+            margin-top: 10px
         }
-        .logo {
-            width: 100%;
-            height: 100%;
+
+        .text {
+            margin-top: -10px;
+            float: right;
+            text-align: right;
         }
+
+        .invoice-number {
+            color: #23448d;
+            font-style: italic;
+            font-weight: bold; 
+            margin-top: -10px;
+        }
+
+        .auction-date {
+            text-align: right
+        }
+
         table { 
             border-collapse: collapse; 
             margin:50px auto;
@@ -25,14 +50,31 @@
         }
 
         th { 
-            background: #bdbdbd; 
+            background: #e2e2e2; 
             font-weight: bold; 
         }
 
         td, th { 
             padding: 10px; 
-            border: 1px solid #aaaaaa; 
+            border: 1px solid #7d7d7d; 
             text-align: left; 
+        }
+
+        .name {
+            color: #23448d;
+            font-weight: bold;
+        }
+
+        i {
+            font-size: 8px;
+        }
+
+        .footer-note {
+            float: left;
+        }
+
+        .footer-date {
+            float: right;
         }
     </style>
 </head>
@@ -41,27 +83,44 @@
     <div class="container">
         <div class="header">
             <img class="logo" src="https://i.ibb.co/LR5YZCB/logo.png" alt="logo" border="0">
+            <div class="text">
+                <h4>INVOICE</h4>
+                <p class="invoice-number">INV/{{date('Ymd', strtotime($lots->end_time));}}/FCA/{{$lots->id}}</p>
+            </div>
+        </div>
+        <hr>
+        <div class="client">
+            <p class="auction-date">Auction Date: {{date('d M Y', strtotime($lots->end_time));}}</p>
+            <p>Bid Winner: {{ $lots->user->name }}</p>
+            <p>Email: {{ $lots->user->email }}</p>
         </div>
         <table>
             <thead>
-              <tr>
-                <th>Item Name</th>
-                <th>QTY</th>
-                <th>Final Price</th>
-              </tr>
+                <tr>
+                    <th>Item Name</th>
+                    <th>QTY</th>
+                    <th>Start Price</th>
+                    <th>Final Price</th>
+                </tr>
             </thead>
             <tbody>
                 <tr>
-                <td style="max-width: 500px">{{$lots->name}}</td>
-                <td>1</td>
-                <td>Rp{{number_format($lots->final_price)}}</td>
+                    <td class="name" style="max-width: 500px">{{$lots->name}}</td>
+                    <td>1</td>
+                    <td>Rp{{number_format($lots->start_price)}}</td>
+                    <td>Rp{{number_format($lots->final_price)}}</td>
                 </tr>
             </tbody>
+            <tfoot>
+                    <td colspan="3">Total</td>
+                    <td>Rp{{number_format($lots->final_price)}}</td>
+            </tfoot>
           </table>
-          <i>
-            This invoice is valid and processed by computer
+          <i class="footer-text">
+            <p class="footer-notes" style="color: grey;">This invoice is valid and processed by computer
             <br>
-            Please call <a href="">Finestcarauction Care</a> if you need help.
+            Please call <a style="color: #23448d; text-decoration: none;" href="asepmnv14@email.com?subject=Need%20help%20about%20Finestcarauction%20">Finestcarauction Care</a> if you need help.</p>
+            <p style="color: grey;" class="footer-date">Last update: {{date('d M Y, h:m A e', strtotime($current_time));}}</p>
           </i>
     </div>
  

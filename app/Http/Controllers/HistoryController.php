@@ -13,6 +13,11 @@ use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class HistoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index() {
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $auth_user = Auth::id();
@@ -23,9 +28,9 @@ class HistoryController extends Controller
     }
 
     public function invoice($id) {
+        $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $lots = Lot::where('id', $id)->first();
-
-        $pdf = PDF::loadView('auction/invoice', compact('lots'));
+        $pdf = PDF::loadView('auction/invoice', compact('lots','current_time'));
         
         return $pdf->download('finestcarauction-invoice.pdf');
     }

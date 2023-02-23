@@ -13,6 +13,10 @@ use Carbon\Carbon;
 
 class LotController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -30,15 +34,6 @@ class LotController extends Controller
             $lots = Lot::with('user')->get();
         }
         return view('auction.dashboard', compact('lots','current_time'))->with('i', (request()->input('page',1)*5));
-    }
-
-    public function searchByName(Request $request)
-    {
-        $name = $request->input('name');
-
-        $users = User::where('name', 'like', '%'.$name.'%')->get();
-
-        return view('user.index', ['users' => $users]);
     }
 
     public function sell()

@@ -44,7 +44,7 @@ Finestcarauction - History
                             <tr>
                                 <td>
                                     <img alt="{{$lot->name}}" src="/lot-images/{{ $lot->image }}" class="avatar avatar-sm rounded-circle me-2">
-                                    <a class="text-heading font-semibold" href="#"> {{$lot->name}} </a>
+                                    <a class="text-heading font-semibold" href="{{ url('lot',$lot->id)}}"> {{$lot->name}} </a>
                                 </td>
                                 <td>
                                     {{date('d M Y, h:m A e', strtotime($lot->end_time));}}

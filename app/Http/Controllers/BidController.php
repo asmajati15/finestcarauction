@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class BidController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function newBid(Request $request, $lot_id)
     {
         $request->validate([

@@ -35,6 +35,12 @@
             color: #fff;
         }
 
+        .carousel img {
+            height: 500px;
+            object-fit: cover;
+            background-repeat: no-repeat;
+        }
+
         .lot-name {
             display: block;
             width: 100%;
@@ -45,14 +51,6 @@
 
         .lots-name {
             text-transform: uppercase;
-        }
-
-        .outer{
-            height: 200px; overflow: hidden;
-        }
-        
-        .readmore{
-            height: auto !important;
         }
 
         @media(min-width: 1024px) {
@@ -132,11 +130,19 @@
                     <!-- Push content down -->
                     <div class="mt-auto"></div>
                     <!-- User (md) -->
-                    <ul class="navbar-nav user-setting">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('profile.edit') }}">
+                                <i class="bi bi-person-square"></i> {{ Auth::user()->name }}
                             </a>
                         </li>
-                        <li class="nav-item" style="margin-left: 7px;">
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="post">
+                                @csrf
+                                <button type="submit" class="nav-link" style="background-color: #fff">
+                                    <i class="bi bi-box-arrow-left"></i> Logout
+                                </button>
+                            </form>
                         </li>
                     </ul>
                 </div>
