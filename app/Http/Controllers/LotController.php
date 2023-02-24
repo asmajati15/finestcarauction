@@ -8,7 +8,7 @@ use App\Models\Bid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use App\Services\Midtrans\CreateSnapTokenService;
 use Carbon\Carbon;
 
 class LotController extends Controller
@@ -124,16 +124,33 @@ class LotController extends Controller
      * @param  \App\Models\Lot  $lot
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    // public function show($id)
+    // {
+    //     $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
+    //     $lots = Lot::where('id', $id)->with('bid')->first();
+    //     if ($lots) {
+    //         return view('auction.detail', compact('lots','current_time'));
+    //     } else {
+    //         return response()->view(404);
+    //     }
+    // }
 
+    public function show(Bid $bid, $id) {
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $lots = Lot::where('id', $id)->with('bid')->first();
-        if ($lots) {
-            return view('auction.detail', compact('lots','current_time'));
-        } else {
-            return response()->view(404);
+        $bid = Bid::where('id',$id)->orderBy('bid_price', 'DESC')->first();
+        $snapToken = $bid->snap_token;
+        if (empty($snapToken)) {
+            // Jika snap token masih NULL, buat token snap dan simpan ke database
+
+            $midtrans = new CreateSnapTokenService($bid);
+            $snapToken = $midtrans->getSnapToken();
+
+            $bid->snap_token = $snapToken;
+            $bid->save();
         }
+        // return response()->json(['snapToken' => $snapToken, 'bid' => $id], 200);
+        return view('auction.detail', compact('lots','current_time','bid', 'snapToken'));
     }
 
     /**

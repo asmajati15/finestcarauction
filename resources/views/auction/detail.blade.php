@@ -68,9 +68,14 @@ Finestcarauction - {{$lots->name}}
                                     {{-- @dd($lots->end_time,$current_time,Date(strtotime($current_time)) < Date(strtotime($lots->end_time))) --}}
                                     @if ($lots->end_time <= $current_time)
                                         @if (DB::table('bids')->select('user_id')->where('lot_id',$lots->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
-                                        <button type="button" class="btn btn-outline-success text-center w-100 mt-5">
+                                        {{-- <button type="button" class="btn btn-outline-success text-center w-100 mt-5 pay-button">
                                             <p class="text-center">Pay</p>
-                                        </button>
+                                        </button> --}}
+                                        {{-- @if ($lots->payment_status == 1) --}}
+                                            <button class="btn btn-outline-success text-center w-100 mt-5" id="pay-button">Pay</button>
+                                        {{-- @else
+                                            Pembayaran berhasil
+                                        @endif --}}
                                         @else
                                         <button type="button" class="btn btn-outline-secondary text-center w-100 mt-5" disabled>
                                             <p class="text-center">Bid Ends</p>
@@ -123,11 +128,11 @@ Finestcarauction - {{$lots->name}}
                         <span class="h6 text-muted fw-light mt-2">
                             <i>
                             @if ($lots->final_price === 0)
-                                Bid must be greater than Rp{{ number_format($lots->start_price) }} 
+                                Bid must be greater than Rp{{ number_format($lots->start_price) }}
                                 <br>
                                 and Incremented by Rp{{ number_format($lots->bid_increment) }}
                             @else
-                                Bid must be greater than Rp{{ number_format($lots->final_price) }} 
+                                Bid must be greater than Rp{{ number_format($lots->final_price) }}
                                 <br>
                                 and Incremented by Rp{{ number_format($lots->bid_increment) }}
                             @endif
@@ -147,6 +152,7 @@ Finestcarauction - {{$lots->name}}
 
 @section('js')
 <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
 <script>
     document.addEventListener('readystatechange', event => {
         if (event.target.readyState === "complete") {
@@ -198,5 +204,31 @@ Finestcarauction - {{$lots->name}}
             }, 1000);
         }
     });
+
+    const payButton = document.querySelector('#pay-button');
+        payButton.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            snap.pay('{{ $snapToken }}', {
+                // Optional
+                onSuccess: function(result) {
+                    /* You may add your own js here, this is just example */
+                    // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                    console.log(result)
+                },
+                // Optional
+                onPending: function(result) {
+                    /* You may add your own js here, this is just example */
+                    // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                    console.log(result)
+                },
+                // Optional
+                onError: function(result) {
+                    /* You may add your own js here, this is just example */
+                    // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                    console.log(result)
+                }
+            });
+        });
 </script>
 @endsection

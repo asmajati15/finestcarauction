@@ -17,7 +17,7 @@ class HistoryController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index() {
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $auth_user = Auth::id();
@@ -31,7 +31,8 @@ class HistoryController extends Controller
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $lots = Lot::where('id', $id)->first();
         $pdf = PDF::loadView('auction/invoice', compact('lots','current_time'));
-        
+
         return $pdf->download('finestcarauction-invoice.pdf');
     }
+
 }
