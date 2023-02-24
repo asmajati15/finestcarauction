@@ -36,10 +36,10 @@ Route::middleware('auth', 'user-access:masyarakat')->group(function () {
     Route::get('/history/invoice/{lot_id}', [HistoryController::class, 'invoice'])->name('bid.invoice');
 });
 
-Route::middleware('auth', 'user-access:petugas')->group(function () {
+Route::middleware('auth', 'user-access:admin', 'user-access:petugas')->group(function () {
 });
 
-Route::middleware('auth', 'user-access:admin')->group(function () {
+Route::middleware('auth', 'user-access:petugas,admin')->group(function () {
     Route::get('/sell', [LotController::class, 'sell'])->name('lot.sell');
     Route::post('/lot', [LotController::class,'store'])->name('lot.store');
     Route::put('/lot/{lot_id}', [LotController::class, 'update'])->name('lot.update');
