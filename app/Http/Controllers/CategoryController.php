@@ -14,7 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('auction.category');
+        $categories = Category::get();
+        return view('auction.category', compact('categories'));
     }
 
     /**
@@ -35,7 +36,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        Category::create([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->back()->with('success', 'Category created successfully');
     }
 
     /**
@@ -67,9 +76,17 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        Category::where('id', $id)->update([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->back()->with('success', 'Category update successfully');
     }
 
     /**
@@ -78,8 +95,10 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category, $id)
     {
-        //
+        Category::where('id', $id)->delete();
+
+        return redirect()->back()->with('success', 'Category delete successfully');
     }
 }

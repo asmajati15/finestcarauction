@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Lot;
 use App\Models\User;
 use App\Models\Bid;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -39,9 +40,10 @@ class LotController extends Controller
     public function sell()
     {
         // date_                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  default_timezone_set('Jakarta');
-        $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
+        $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s', 'Asia/Jakarta');
+        $categories = Category::get();
         $lots = Lot::with('user')->get();
-        return view('auction.sell', compact('lots','current_time'));
+        return view('auction.sell', compact('lots','categories','current_time'));
     }
 
     public function open(Request $request, $id)
@@ -86,6 +88,7 @@ class LotController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'category_id' => 'required',
             'description' => 'required',
             'start_price' => 'required',
             'bid_increment' => 'required',
@@ -138,19 +141,19 @@ class LotController extends Controller
     public function show(Bid $bid, $id) {
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $lots = Lot::where('id', $id)->with('bid')->first();
-        $bid = Bid::where('id',$id)->orderBy('bid_price', 'DESC')->first();
-        $snapToken = $bid->snap_token;
-        if (empty($snapToken)) {
-            // Jika snap token masih NULL, buat token snap dan simpan ke database
+        $bid = Bid::where('id',$id)->get();
+        // $snapToken = $bid->snap_token;
+        // if (empty($snapToken)) {
+        //     // Jika snap token masih NULL, buat token snap dan simpan ke database
 
-            $midtrans = new CreateSnapTokenService($bid);
-            $snapToken = $midtrans->getSnapToken();
+        //     $midtrans = new CreateSnapTokenService($bid);
+        //     $snapToken = $midtrans->getSnapToken();
 
-            $bid->snap_token = $snapToken;
-            $bid->save();
-        }
+        //     $bid->snap_token = $snapToken;
+        //     $bid->save();
+        // }
         // return response()->json(['snapToken' => $snapToken, 'bid' => $id], 200);
-        return view('auction.detail', compact('lots','current_time','bid', 'snapToken'));
+        return view('auction.detail', compact('lots','current_time','bid'));
     }
 
     /**
@@ -182,7 +185,7 @@ class LotController extends Controller
             // 'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // $input = $request->except(['_token', '_method' ]);
+        $input = $request->except(['_token', '_method' ]);
 
         if ($image = $request->file('image')) {
             $destinationPath = 'lot-images/';

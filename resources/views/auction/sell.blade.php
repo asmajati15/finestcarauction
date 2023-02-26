@@ -73,7 +73,7 @@ Finestcarauction - Sell Lots
                                 {{date('d M Y, h:m A e', strtotime($lot->created_at));}}
                             </td> --}}
                             <td>
-                                {{date('d M Y, h:m A e', strtotime($lot->end_time));}}
+                                {{date('d M Y, H:m', strtotime($lot->end_time));}}
                             </td>
                             <td>
                                 @if ($lot->user_id === NULL)
@@ -191,9 +191,9 @@ Finestcarauction - Sell Lots
                         <label class="form-label">Category</label>
                         <select class="form-select" aria-label="Default select example" name="category_id">
                             <option hidden>Select Category</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="row mb-3">

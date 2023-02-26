@@ -12,7 +12,7 @@ use Carbon\Carbon;
 
 class CreateSnapTokenService extends Midtrans
 {
-    // protected $bid;
+    protected $bid;
 
     public function __construct($bid)
     {

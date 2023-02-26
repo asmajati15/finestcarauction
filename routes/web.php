@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LotController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/lot/{lot_id}', [LotController::class, 'destroy'])->name('lot.destroy');
     Route::post('/close/{lot_id}', [LotController::class, 'close'])->name('lot.close');
     Route::post('/open/{lot_id}', [LotController::class, 'open'])->name('lot.open');
+    Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
+    Route::post('/category', [CategoryController::class,'store'])->name('category.store');
+    Route::put('/category/{category_id}', [CategoryController::class, 'update'])->name('category.update');
+    Route::delete('/category/{category_id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 });
 
 // Route::middleware('auth', 'user-access:masyarakat')->group(function () {
