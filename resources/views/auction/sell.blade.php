@@ -55,7 +55,7 @@ Finestcarauction - Sell Lots
                         @foreach ($lots as $lot)
                         {{-- @if ($lot->user->level == 0) --}}
                         {{-- @if (auth()->user()->id == $lot->user_id) --}}
-                        
+
                         {{-- @dd($lot) --}}
                         {{-- @dd(DB::table('bids')->where('lot_id',5)->orderBy('bid_price','DESC')->get()) --}}
                         <tr>
@@ -77,13 +77,13 @@ Finestcarauction - Sell Lots
                             </td>
                             <td>
                                 @if ($lot->user_id === NULL)
-                                    <span class="text-danger">No one bid yet</span> 
+                                    <span class="text-danger">No one bid yet</span>
                                 @else
                                     {{ $lot->user->name }}
                                 @endif
                             </td>
                             <td>
-                                @if ($lot->status === 0)    
+                                @if ($lot->status === 0)
                                     <span class="badge badge-pill bg-soft-danger text-danger me-2">
                                         <span>Ends</span>
                                     </span>
@@ -93,9 +93,9 @@ Finestcarauction - Sell Lots
                                     </span>
                                 @endif
                             </td>
-                            <td class="text-end"> 
+                            <td class="text-end">
                                 {{-- <a class="btn btn-primary" href="{{ route('lot.edit',$lot->id) }}">Edit</a> --}}
-                                @if ($lot->status === 0)   
+                                @if ($lot->status === 0)
                                     {{-- <form action="{{ route('lot.open',$lot->id) }}" method="POST" class="d-inline-block">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-outline-primary" name="status" value="1">
@@ -143,6 +143,7 @@ Finestcarauction - Sell Lots
         <div class="modal-content">
             <form action="{{ route('lot.open',$lot->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
                 <div class="modal-header">
                     <h5 class="modal-title">Open this lot to auction</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -161,7 +162,7 @@ Finestcarauction - Sell Lots
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <input type="submit" class="btn blue-800" name="save" value="Submit">
+                    <button type="submit" class="btn blue-800">Submit</button>
                 </div>
             </form>
         </div>
@@ -271,7 +272,7 @@ Finestcarauction - Sell Lots
 @endsection
 
 @section('js')
-<script>    
+<script>
     var today = new Date().toISOString().slice(0, 16);
 
     document.getElementsByName("end_time")[0].min = today;

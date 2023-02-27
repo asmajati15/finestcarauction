@@ -48,6 +48,11 @@ class LotController extends Controller
 
     public function open(Request $request, $id)
     {
+        $request->validate([
+            'status' => 'required',
+            'end_time' => 'required',
+        ]);
+
         // $input = $request->all();
         Lot::where('id', $id)->update([
             'status' => $request->status,
@@ -141,19 +146,23 @@ class LotController extends Controller
     public function show(Bid $bid, $id) {
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $lots = Lot::where('id', $id)->with('bid')->first();
-        $bid = Bid::where('id',$id)->first();
-        $snapToken = $bid->snap_token;
-        if (empty($snapToken)) {
-            // Jika snap token masih NULL, buat token snap dan simpan ke database
+        if ($lots->end_time <= $current_time) {
+            $bid = Bid::where('id',$id)->first();
+            $snapToken = $bid->snap_token;
+            if (empty($snapToken)) {
+                // Jika snap token masih NULL, buat token snap dan simpan ke database
 
-            $midtrans = new CreateSnapTokenService($bid);
-            $snapToken = $midtrans->getSnapToken();
+                $midtrans = new CreateSnapTokenService($bid);
+                $snapToken = $midtrans->getSnapToken();
 
-            $bid->snap_token = $snapToken;
-            $bid->save();
+                $bid->snap_token = $snapToken;
+                $bid->save();
+            }
+            // return response()->json(['snapToken' => $snapToken, 'bid' => $id], 200);
+            return view('auction.detail', compact('lots','current_time','bid','snapToken'));
+        } else {
+            return view('auction.detail', compact('lots','current_time'));
         }
-        // return response()->json(['snapToken' => $snapToken, 'bid' => $id], 200);
-        return view('auction.detail', compact('lots','current_time','bid','snapToken'));
     }
 
     /**

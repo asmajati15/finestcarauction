@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/lot/{lot_id}', [LotController::class, 'update'])->name('lot.update');
     Route::delete('/lot/{lot_id}', [LotController::class, 'destroy'])->name('lot.destroy');
     Route::post('/close/{lot_id}', [LotController::class, 'close'])->name('lot.close');
-    Route::post('/open/{lot_id}', [LotController::class, 'open'])->name('lot.open');
+    Route::put('/open/{lot_id}', [LotController::class, 'open'])->name('lot.open');
     Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
     Route::post('/category', [CategoryController::class,'store'])->name('category.store');
     Route::put('/category/{category_id}', [CategoryController::class, 'update'])->name('category.update');

@@ -204,7 +204,8 @@ Finestcarauction - {{$lots->name}}
             }, 1000);
         }
     });
-    
+
+    @if ($lots->end_time <= $current_time)
     const payButton = document.querySelector('#pay-button');
     payButton.addEventListener('click', function(e) {
         e.preventDefault();
@@ -230,5 +231,6 @@ Finestcarauction - {{$lots->name}}
             }
         });
     });
+    @endif
 </script>
 @endsection
