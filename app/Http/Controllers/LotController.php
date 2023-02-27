@@ -141,19 +141,19 @@ class LotController extends Controller
     public function show(Bid $bid, $id) {
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $lots = Lot::where('id', $id)->with('bid')->first();
-        $bid = Bid::where('id',$id)->get();
-        // $snapToken = $bid->snap_token;
-        // if (empty($snapToken)) {
-        //     // Jika snap token masih NULL, buat token snap dan simpan ke database
+        $bid = Bid::where('id',$id)->first();
+        $snapToken = $bid->snap_token;
+        if (empty($snapToken)) {
+            // Jika snap token masih NULL, buat token snap dan simpan ke database
 
-        //     $midtrans = new CreateSnapTokenService($bid);
-        //     $snapToken = $midtrans->getSnapToken();
+            $midtrans = new CreateSnapTokenService($bid);
+            $snapToken = $midtrans->getSnapToken();
 
-        //     $bid->snap_token = $snapToken;
-        //     $bid->save();
-        // }
+            $bid->snap_token = $snapToken;
+            $bid->save();
+        }
         // return response()->json(['snapToken' => $snapToken, 'bid' => $id], 200);
-        return view('auction.detail', compact('lots','current_time','bid'));
+        return view('auction.detail', compact('lots','current_time','bid','snapToken'));
     }
 
     /**

@@ -22,9 +22,11 @@
         body {
             font-family: 'Poppins', sans-serif;
         }
+
         .classic {
             font-family: 'Playfair Display', serif;
         }
+
         .blue-800 {
             background-color: #23448d;
             color: #fff;
@@ -32,6 +34,16 @@
 
         .blue-800:hover {
             background-color: #182d5c;
+            color: #fff;
+        }
+
+        .blue-600 {
+            background-color: #3468d6;
+            color: #fff;
+        }
+
+        .blue-600:hover {
+            background-color: #23448d;
             color: #fff;
         }
 
@@ -84,22 +96,6 @@
                 </a>
                 <!-- User menu (mobile) -->
                 <div class="navbar-user d-lg-none">
-                    <!-- Dropdown -->
-                    <div class="dropdown">
-                        <!-- Toggle -->
-                        <a href="#" id="sidebarAvatar" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <div class="avatar-parent-child">
-                                <img alt="Image Placeholder" src="https://images.unsplash.com/photo-1548142813-c348350df52b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" class="avatar avatar- rounded-circle">
-                                <span class="avatar-child avatar-badge bg-success"></span>
-                            </div>
-                        </a>
-                        <!-- Menu -->
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="sidebarAvatar">
-                            <hr class="dropdown-divider">
-                                
-                            </form>
-                        </div>
-                    </div>
                 </div>
                 <!-- Collapse -->
                 <div class="collapse navbar-collapse" id="sidebarCollapse">
@@ -122,8 +118,8 @@
                         </li>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-exclamation-circle"></i> Report
+                            <a class="nav-link" href="{{route('category.index')}}">
+                                <i class="bi bi-tags"></i> Category
                             </a>
                         </li>
                     </ul>

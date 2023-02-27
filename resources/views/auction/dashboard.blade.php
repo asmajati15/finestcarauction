@@ -16,11 +16,11 @@ Finestcarauction
                         <div class="mx-n1">
                             <form action="{{ route('lot.index') }}" method="GET" role="search">
                                 <div class="input-group mb-3">
-                                    <button class="btn btn-primary" type="submit" title="Search">
+                                    <button class="btn blue-800" type="submit" title="Search">
                                         <span class="bi bi-search"></span>
                                     </button>
                                     <input type="text" class="form-control mr-2" name="q" placeholder="Search lot items" id="q">
-                                    <a href="{{ route('lot.index') }}" class="btn btn-success" title="Refresh Page">
+                                    <a href="{{ route('lot.index') }}" class="btn blue-600" title="Refresh Page">
                                         <span class="bi bi-arrow-clockwise"></span>
                                     </a>
                                 </div>
