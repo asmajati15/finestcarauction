@@ -105,9 +105,9 @@ Finestcarauction
                                 @if ($lot->end_time <= $current_time)
                                     {{-- @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id()) --}}
                                     @if ($lot->user_id==Auth::id())
-                                    <button type="button" class="btn btn-outline-success text-center w-100">
-                                        <p class="text-center">Pay</p>
-                                    </button>
+                                    <a href="{{ url('lot',$lot->id)}}" class="btn btn-outline-success text-center w-100">
+                                        <p class="text-center">Go to Payement</p>
+                                    </a>
                                     @else
                                     <button type="button" class="btn btn-outline-secondary text-center w-100" disabled>
                                         <p class="text-center">Bid Ends</p>

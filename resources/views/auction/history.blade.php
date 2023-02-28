@@ -76,7 +76,7 @@ Finestcarauction - History
                                     @if ($lot->end_time <= $current_time)
                                         @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
                                         <a href="{{ route('bid.invoice',$lot->id) }}" class="btn btn-sm btn-outline-primary">Invoice</a>
-                                        <button type="button" class="btn btn-sm btn-outline-success">Pay</button>
+                                        <a href="{{ url('lot',$lot->id)}}" class="btn btn-sm btn-outline-success">Pay</a>
                                         @else
                                         <button type="button" class="btn btn-sm btn-outline-secondary" disabled>You Lose</button>
                                         @endif
@@ -112,50 +112,52 @@ Finestcarauction - History
                         <tbody>
                             @foreach ($lots2 as $lot)
                                 @if ($lot->user_id != NULL)
-                            <tr>
-                                <td>
-                                    <img alt="{{$lot->name}}" src="/lot-images/{{ $lot->image }}" class="avatar avatar-sm rounded-circle me-2">
-                                    <a class="text-heading font-semibold" href="{{ route('lot.show',$lot->id) }}"> {{$lot->name}} </a>
-                                </td>
-                                <td>
-                                    {{date('d M Y, h:m A e', strtotime($lot->end_time));}}
-                                </td>
-                                <td>
-                                    {{$lot->user->name}}
-                                </td>
-                                <td>
-                                    Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lot->id)->orderBy('bid_price','DESC')->first()) ? $ac->bid_price : 0,0,',','.') }}
-                                </td>
-                                <td>
-                                    @if ($lot->end_time <= $current_time)
-                                        @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
-                                            <span class="badge badge-pill bg-soft-success text-success me-2">
-                                                <span>Win</span>
-                                            </span>
-                                        @else
-                                            <span class="badge badge-pill bg-soft-danger text-danger me-2">
-                                                <span>Lose</span>
-                                            </span>
-                                        @endif
-                                    @else
-                                        <span class="badge badge-pill bg-soft-primary text-primary me-2">
-                                            <span>On Progress</span>
-                                        </span>
+                                    @if (auth()->user()->id == $lot->user_id)
+                                    <tr>
+                                        <td>
+                                            <img alt="{{$lot->name}}" src="/lot-images/{{ $lot->image }}" class="avatar avatar-sm rounded-circle me-2">
+                                            <a class="text-heading font-semibold" href="{{ route('lot.show',$lot->id) }}"> {{$lot->name}} </a>
+                                        </td>
+                                        <td>
+                                            {{date('d M Y, h:m A e', strtotime($lot->end_time));}}
+                                        </td>
+                                        <td>
+                                            {{$lot->user->name}}
+                                        </td>
+                                        <td>
+                                            Rp{{number_format(!is_null($ac = DB::table('bids')->where('lot_id',$lot->id)->orderBy('bid_price','DESC')->first()) ? $ac->bid_price : 0,0,',','.') }}
+                                        </td>
+                                        <td>
+                                            @if ($lot->end_time <= $current_time)
+                                                @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
+                                                    <span class="badge badge-pill bg-soft-success text-success me-2">
+                                                        <span>Win</span>
+                                                    </span>
+                                                @else
+                                                    <span class="badge badge-pill bg-soft-danger text-danger me-2">
+                                                        <span>Lose</span>
+                                                    </span>
+                                                @endif
+                                            @else
+                                                <span class="badge badge-pill bg-soft-primary text-primary me-2">
+                                                    <span>On Progress</span>
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($lot->end_time <= $current_time)
+                                                @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
+                                                <button type="button" class="btn btn-sm btn-outline-success">Pay</button>
+                                                @else
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" disabled>You Lose</button>
+                                                @endif
+                                            @else
+                                                <button type="button" class="btn btn-sm btn-outline-danger">Cancel</button>
+                                            @endif
+                                        </td>
+                                    </tr>
                                     @endif
-                                </td>
-                                <td>
-                                    @if ($lot->end_time <= $current_time)
-                                        @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
-                                        <button type="button" class="btn btn-sm btn-outline-success">Pay</button>
-                                        @else
-                                        <button type="button" class="btn btn-sm btn-outline-secondary" disabled>You Lose</button>
-                                        @endif
-                                    @else
-                                        <button type="button" class="btn btn-sm btn-outline-danger">Cancel</button>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endif
+                                @endif
                             @endforeach
                         </tbody>
                     </table>

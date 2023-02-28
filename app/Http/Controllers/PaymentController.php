@@ -22,4 +22,8 @@ class PaymentController extends Controller
         }
 
     }
+
+    public function tembak(Request $request) {
+        return response()->json($request->data, 200);
+    }
 }

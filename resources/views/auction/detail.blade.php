@@ -64,7 +64,7 @@ Finestcarauction - {{$lots->name}}
                                         </span>
                                         <span class="h4 text-muted fw-light d-block mt-1">{{date('d M Y, h:m A e', strtotime($lots->end_time));}}</span>
                                     </div>
-
+                                    {{-- <button class="btn btn-success" onclick="payed()"></button> --}}
                                     {{-- @dd($lots->end_time,$current_time,Date(strtotime($current_time)) < Date(strtotime($lots->end_time))) --}}
                                     @if ($lots->end_time <= $current_time)
                                         @if (DB::table('bids')->select('user_id')->where('lot_id',$lots->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
@@ -215,7 +215,18 @@ Finestcarauction - {{$lots->name}}
             onSuccess: function(result) {
                 /* You may add your own js here, this is just example */
                 // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                console.log(result)
+                // console.log(result)
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('test') }}",
+                    data: {
+                        'id':{{ $lots->id }},
+                        'result':result
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    },
+                });
             },
             // Optional
             onPending: function(result) {
@@ -232,5 +243,19 @@ Finestcarauction - {{$lots->name}}
         });
     });
     @endif
+
+    function payed(){
+        $.ajax({
+                    type: "POST",
+                    url: "{{ route('test') }}",
+                    data: {
+                        'id':{{ $lots->id }},
+                        'result':result
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    },
+                });
+    }
 </script>
 @endsection
