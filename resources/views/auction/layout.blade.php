@@ -91,7 +91,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <!-- Brand -->
-                <a class="navbar-brand py-lg-2 mb-lg-5 px-lg-6 me-0" href="{{route('dashboard')}}">
+                <a class="navbar-brand py-lg-2 mb-lg-5 px-lg-6 me-0" href="{{route('lot.index')}}">
                     <img src="{{asset('image/logo.png')}}" alt="...">
                 </a>
                 <!-- User menu (mobile) -->
@@ -107,21 +107,23 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('lot.sell')}}">
-                                <i class="bi bi-wallet"></i> Sell Lots
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="{{route('bid.history')}}">
                                 <i class="bi bi-clock-history"></i> History
                             </a>
                         </li>
+                        @if (auth()->user()->type != 'user')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('manager.lot.sell')}}">
+                                <i class="bi bi-wallet"></i> Sell Lots
+                            </a>
+                        </li>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('category.index')}}">
+                            <a class="nav-link" href="{{route('manager.category.index')}}">
                                 <i class="bi bi-tags"></i> Category
                             </a>
                         </li>
+                        @endif
                     </ul>
                     <!-- Push content down -->
                     <div class="mt-auto"></div>
@@ -146,7 +148,7 @@
         </nav>
         <!-- Main content -->
         @yield('main-content')
-        
+
     </div>
     <!-- <script src="{{ mix('/js/app.js') }}"></script> -->
     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>

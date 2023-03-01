@@ -218,7 +218,7 @@ Finestcarauction - {{$lots->name}}
                 // console.log(result)
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('test') }}",
+                    url: "{{ route('test',$bid->id) }}",
                     data: {
                         'id':{{ $lots->id }},
                         'result':result
@@ -243,19 +243,5 @@ Finestcarauction - {{$lots->name}}
         });
     });
     @endif
-
-    function payed(){
-        $.ajax({
-                    type: "POST",
-                    url: "{{ route('test') }}",
-                    data: {
-                        'id':{{ $lots->id }},
-                        'result':result
-                    },
-                    success: function (data) {
-                        console.log(data);
-                    },
-                });
-    }
 </script>
 @endsection

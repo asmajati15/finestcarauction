@@ -52,7 +52,7 @@ class CreateSnapTokenService extends Midtrans
         $user = User::where('id', $this->bid->user_id)->first();
         $item[] = [
             'price' => $this->bid->bid_price,
-            'name' => substr($this->bid->name, 0, 7).'...',
+            'name' => substr($this->bid->lot->name, 0, 7).'...',
             'quantity' => 1,
         ];
 

@@ -16,7 +16,7 @@ class LotController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
@@ -147,7 +147,7 @@ class LotController extends Controller
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $lots = Lot::where('id', $id)->with('bid')->first();
         if ($lots->end_time <= $current_time) {
-            $bid = Bid::where('id',$id)->first();
+            $bid = Bid::where('lot_id',$lots->id)->orderBy('bid_price', 'DESC')->first();
             $snapToken = $bid->snap_token;
             if (empty($snapToken)) {
                 // Jika snap token masih NULL, buat token snap dan simpan ke database

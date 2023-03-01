@@ -39,10 +39,10 @@ class AuthenticatedSessionController extends Controller
 
         if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
         {
-            if (auth()->user()->type == 'petugas') {
-                return redirect()->route('lot.sell');
-            }else if (auth()->user()->type == 'admin') {
-                return redirect()->route('lot.sell');
+            if (auth()->user()->type == 'admin') {
+                return redirect()->route('admin.lot.sell');
+            }else if (auth()->user()->type == 'petugas') {
+                return redirect()->route('admin.lot.sell');
             }else{
                 return redirect()->route('lot.index');
             }

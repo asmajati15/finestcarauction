@@ -21,4 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('get-snap-token/{$id}', [PaymentController::class,'getSnapToken'])->name('get-snap-token');
 
-Route::post('test', [PaymentController::class, 'tembak'])->name('test');
+Route::post('test/{id}', [PaymentController::class, 'tembak'])->name('test');

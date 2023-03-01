@@ -61,7 +61,7 @@ Finestcarauction - Sell Lots
                         <tr>
                             <td>
                                 <img alt="{{$lot->name}}" src="/lot-images/{{ $lot->image }}"  class="avatar avatar-sm rounded-circle me-2">
-                                <a class="text-heading font-semibold" href="{{ route('lot.show',$lot->id) }}" style="display: inline-block; width: 250px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"> {{$lot->name}} </a>
+                                <a class="text-heading font-semibold" href="{{ route('manager.lot.show',$lot->id) }}" style="display: inline-block; width: 250px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"> {{$lot->name}} </a>
                             </td>
                             <td>
                                 Rp{{number_format($lot->start_price)}}
@@ -94,9 +94,9 @@ Finestcarauction - Sell Lots
                                 @endif
                             </td>
                             <td class="text-end">
-                                {{-- <a class="btn btn-primary" href="{{ route('lot.edit',$lot->id) }}">Edit</a> --}}
+                                {{-- <a class="btn btn-primary" href="{{ route('manager.lot.edit',$lot->id) }}">Edit</a> --}}
                                 @if ($lot->status === 0)
-                                    {{-- <form action="{{ route('lot.open',$lot->id) }}" method="POST" class="d-inline-block">
+                                    {{-- <form action="{{ route('manager.lot.open',$lot->id) }}" method="POST" class="d-inline-block">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-outline-primary" name="status" value="1">
                                             Open
@@ -106,17 +106,17 @@ Finestcarauction - Sell Lots
                                         </a>
                                     {{-- </form> --}}
                                 @else
-                                    <form action="{{ route('lot.close',$lot->id) }}" method="POST" class="d-inline-block">
+                                    <form action="{{ route('manager.lot.close',$lot->id) }}" method="POST" class="d-inline-block">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-outline-warning" name="status" value="0" onclick="return confirm('Are you sure want to close this lot?')">
                                             Close
                                         </button>
                                     </form>
                                 @endif
-                                <a class="btn btn-sm btn-square btn-outline-success" data-bs-toggle="modal" data-bs-target="#UpdateModal" data-url="{{ route('lot.update',$lot->id) }}" data-name="{{ $lot->name }}" data-description="{{ $lot->description }}" data-start_price="{{ $lot->start_price }}" data-bid_increment="{{ $lot->bid_increment }}" data-end_time="{{ $lot->end_time }}" data-image="/lot-images/{{ $lot->image }}">
+                                <a class="btn btn-sm btn-square btn-outline-success" data-bs-toggle="modal" data-bs-target="#UpdateModal" data-url="{{ route('manager.lot.update',$lot->id) }}" data-name="{{ $lot->name }}" data-description="{{ $lot->description }}" data-start_price="{{ $lot->start_price }}" data-bid_increment="{{ $lot->bid_increment }}" data-end_time="{{ $lot->end_time }}" data-image="/lot-images/{{ $lot->image }}">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <form action="{{ route('lot.destroy',$lot->id) }}" method="POST" class="d-inline-block">
+                                <form action="{{ route('manager.lot.destroy',$lot->id) }}" method="POST" class="d-inline-block">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-square btn-outline-danger" onclick="return confirm('Are you sure want to delete this lot?')">
@@ -141,7 +141,7 @@ Finestcarauction - Sell Lots
 <div class="modal fade" id="OpenModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form action="{{ route('lot.open',$lot->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('manager.lot.open',$lot->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-header">
@@ -172,7 +172,7 @@ Finestcarauction - Sell Lots
 <div class="modal fade" id="AddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form action="{{ route('lot.store') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('manager.lot.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title">Add Lot Item to Auction</h5>

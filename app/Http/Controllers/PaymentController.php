@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Bid;
+use Illuminate\Support\Facades\DB;
 use App\Services\Midtrans\CreateSnapTokenService;
 
 class PaymentController extends Controller
@@ -23,7 +24,16 @@ class PaymentController extends Controller
 
     }
 
-    public function tembak(Request $request) {
+    public function tembak(Request $request, $id) {
+    // dd($request->result['status_code']);
+        DB::table('bids')->where('id', $id)->update([
+            'payment_status' => $request->result['status_code'],
+            'jumlah_pembayaran' => $request->result['gross_amount'],
+            'payment_status_message' => $request->result['status_message'],
+            'transaction_time' => $request->result['transaction_time'],
+            'payment_type' => $request->result['card_type'],
+        ]);
+
         return response()->json($request->data, 200);
     }
 }

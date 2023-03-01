@@ -40,7 +40,7 @@ Finestcarauction - History
                         </thead>
                         <tbody>
                             @foreach ($lots as $lot)
-                                
+
                             <tr>
                                 <td>
                                     <img alt="{{$lot->name}}" src="/lot-images/{{ $lot->image }}" class="avatar avatar-sm rounded-circle me-2">
@@ -112,7 +112,7 @@ Finestcarauction - History
                         <tbody>
                             @foreach ($lots2 as $lot)
                                 @if ($lot->user_id != NULL)
-                                    @if (auth()->user()->id == $lot->user_id)
+                                    {{-- @if (auth()->user()->id == $lot->user_id) --}}
                                     <tr>
                                         <td>
                                             <img alt="{{$lot->name}}" src="/lot-images/{{ $lot->image }}" class="avatar avatar-sm rounded-circle me-2">
@@ -156,7 +156,7 @@ Finestcarauction - History
                                             @endif
                                         </td>
                                     </tr>
-                                    @endif
+                                    {{-- @endif --}}
                                 @endif
                             @endforeach
                         </tbody>

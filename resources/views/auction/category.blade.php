@@ -52,10 +52,10 @@ Finestcarauction - Category List
                                 <p class="text-heading font-semibold">{{$category->name}}</p>
                             </td>
                             <td>
-                                <a class="btn btn-sm btn-square btn-outline-success" data-bs-toggle="modal" data-bs-target="#UpdateModal" data-url="{{ route('category.update',$category->id) }}" data-name="{{ $category->name }}">
+                                <a class="btn btn-sm btn-square btn-outline-success" data-bs-toggle="modal" data-bs-target="#UpdateModal" data-url="{{ route('manager.category.update',$category->id) }}" data-name="{{ $category->name }}">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <form action="{{ route('category.destroy',$category->id) }}" method="POST" class="d-inline-block">
+                                <form action="{{ route('manager.category.destroy',$category->id) }}" method="POST" class="d-inline-block">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-square btn-outline-danger" onclick="return confirm('Are you sure want to delete this category?')">
@@ -79,7 +79,7 @@ Finestcarauction - Category List
 <div class="modal fade" id="AddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form action="{{ route('category.store') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('manager.category.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title">Add category name</h5>
@@ -114,7 +114,7 @@ Finestcarauction - Category List
 @endsection
 
 @section('js')
-<script>    
+<script>
     $('#UpdateModal').on('shown.bs.modal', function(e) {
         var html = `
             <div class="modal-header">
