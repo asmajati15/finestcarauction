@@ -37,6 +37,17 @@
             color: #fff;
         }
 
+        .blue-800-outline {
+            background-color: #ffffff;
+            color: #23448d;
+            border-color: #23448d;
+        }
+
+        .blue-800-outline:hover {
+            background-color: #182d5c;
+            color: #fff;
+        }
+
         .blue-600 {
             background-color: #3468d6;
             color: #fff;
@@ -80,7 +91,6 @@
 </head>
 
 <body>
-
     <!-- Dashboard -->
     <div class="main-content d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
         <!-- Vertical Navbar -->
@@ -101,34 +111,64 @@
                 <div class="collapse navbar-collapse" id="sidebarCollapse">
                     <!-- Navigation -->
                     <ul class="navbar-nav">
+                        @if (Route::has('login'))
+                            @auth
+                                @if (auth()->user()->type != 'user')
+                                <li class="nav-item">
+                                    <a class="nav-link" 
+                                    @if (auth()->user()->type == 'manager')
+                                        href="{{route('manager.index')}}"
+                                    @else
+                                        href="{{route('admin.index')}}"
+                                    @endif
+                                    >
+                                        <i class="bi bi-speedometer2"></i> Dashboard
+                                    </a>
+                                </li>
+                                @endif
+                            @endauth
+                        @endif
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('lot.index')}}">
                                 <i class="bi bi-hammer"></i> Auction
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('bid.history')}}">
-                                <i class="bi bi-clock-history"></i> History
-                            </a>
-                        </li>
-                        @if (auth()->user()->type != 'user')
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('manager.lot.sell')}}">
-                                <i class="bi bi-wallet"></i> Sell Lots
-                            </a>
-                        </li>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('manager.category.index')}}">
-                                <i class="bi bi-tags"></i> Category
-                            </a>
-                        </li>
+                        @if (Route::has('login'))
+                            @auth
+                                @if (auth()->user()->type == 'manager')
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{route('manager.lot.sell')}}">
+                                            <i class="bi bi-wallet"></i> Sell Lots
+                                        </a>
+                                    </li>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{route('manager.category.index')}}">
+                                            <i class="bi bi-tags"></i> Category
+                                        </a>
+                                    </li>
+                                @elseif (auth()->user()->type == 'admin')
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{route('admin.userList')}}">
+                                            <i class="bi bi-people-fill"></i> User List
+                                        </a>
+                                    </li>
+                                @else
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{route('bid.history')}}">
+                                            <i class="bi bi-clock-history"></i> History
+                                        </a>
+                                    </li>
+                                @endif
+                            @endauth
                         @endif
                     </ul>
                     <!-- Push content down -->
                     <div class="mt-auto"></div>
                     <!-- User (md) -->
+                    @if (Route::has('login'))
                     <ul class="navbar-nav">
+                        @auth
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('profile.edit') }}">
                                 <i class="bi bi-person-square"></i> {{ Auth::user()->name }}
@@ -138,11 +178,23 @@
                             <form action="{{ route('logout') }}" method="post">
                                 @csrf
                                 <button type="submit" class="nav-link" style="background-color: #fff">
-                                    <i class="bi bi-box-arrow-left"></i> Logout
+                                    <i class="bi bi-box-arrow-left" style="margin-left: -10px;"></i> <span style="margin-left: 10px">Logout</span>
                                 </button>
                             </form>
                         </li>
+                        @else
+                        <li class="nav-item" style="margin-left: 20px;">
+                            <a class="btn blue-800" href="{{ route('login') }}">
+                                Login
+                            </a>
+                            <a class="btn blue-800-outline" style="margin-left: 10px;" href="{{ route('register') }}">
+                                Register
+                            </a>
+                        </li>
+                        @endauth
                     </ul>
+
+                    @endif
                 </div>
             </div>
         </nav>

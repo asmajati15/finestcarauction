@@ -1,4 +1,4 @@
-@extends('auction/layout')
+@extends('layouts/home')
 
 @section('title')
 Finestcarauction - {{$lots->name}}

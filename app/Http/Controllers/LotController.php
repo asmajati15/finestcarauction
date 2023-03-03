@@ -43,15 +43,15 @@ class LotController extends Controller
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s', 'Asia/Jakarta');
         $categories = Category::get();
         $lots = Lot::with('user')->get();
-        return view('auction.sell', compact('lots','categories','current_time'));
+        return view('manager.sell', compact('lots','categories','current_time'));
     }
 
     public function open(Request $request, $id)
     {
-        $request->validate([
-            'status' => 'required',
-            'end_time' => 'required',
-        ]);
+        // $request->validate([
+        //     'status' => 'required',
+        //     'end_time' => 'required',
+        // ]);
 
         // $input = $request->all();
         Lot::where('id', $id)->update([
