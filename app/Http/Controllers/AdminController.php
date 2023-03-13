@@ -9,6 +9,7 @@ use App\Models\Bid;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -21,7 +22,7 @@ class AdminController extends Controller
     {
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $lots = Lot::get();
-        $bids = Bid::get();
+        $bids = Bid::groupBy('lot_id')->orderBy('lot_id', 'desc')->get();
         $categories = Category::get();
         return view('admin.dashboard', compact('categories','bids', 'lots', 'current_time'));
     }
@@ -30,17 +31,18 @@ class AdminController extends Controller
     {
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         $lots = Lot::get();
-        $bids = Bid::get();
+        $bids = Bid::groupBy('lot_id')->orderBy('lot_id', 'desc')->get();
         $categories = Category::get();
         return view('manager.dashboard', compact('categories','bids', 'lots', 'current_time'));
     }
 
-    public function report($id) {
+    public function report() {
         $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
-        $lots = Lot::where('id', $id)->first();
-        $pdf = PDF::loadView('auction/invoice', compact('lots','current_time'));
+        $lots = Lot::get();
+        $bids = Bid::get();
+        $pdf = PDF::loadView('pdf/report', compact('lots','bids','current_time'));
 
-        return $pdf->download('finestcarauction-invoice.pdf');
+        return $pdf->download('finestcarauction-admin-report.pdf');
     }
 
     public function userList()
@@ -77,7 +79,7 @@ class AdminController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => Hash::make($request->password),
             'type' => 1,
         ]);
 
@@ -122,10 +124,10 @@ class AdminController extends Controller
             'password_confirmation' => 'required|same:password',
         ]);
 
-        user::where('id', $id)->update([
+        User::where('id', $id)->update([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => Hash::make($request->password),
             'type' => 1,
         ]);
 
@@ -143,5 +145,23 @@ class AdminController extends Controller
         User::where('id', $id)->delete();
 
         return redirect()->back()->with('success', 'Account delete successfully');
+    }
+
+    public function blacklist(Request $request, $id)
+    {
+        User::where('id', $id)->update([
+            'status' => $request->status,
+        ]);
+
+        return redirect()->back()->with('success', 'Account updated successfully');
+    }
+
+    public function unblacklist(Request $request, $id)
+    {
+        User::where('id', $id)->update([
+            'status' => $request->status,
+        ]);
+
+        return redirect()->back()->with('success', 'Account updated successfully');
     }
 }

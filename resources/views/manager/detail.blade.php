@@ -1,12 +1,13 @@
-@extends('layouts/user')
+@extends('layouts/admin')
 
 @section('title')
 Finestcarauction - {{$lots->name}}
 @endsection
 
 @section('main-content')
-    <main class="py-6 bg-surface-secondary" style="margin-top: 5%">>
-        <div class="container">
+<div class="h-screen flex-grow-1 overflow-y-lg-auto large-screen" style="">
+    <main class="py-6 bg-surface-secondary">
+        <div class="container-fluid">
             <!-- Card stats -->
             <div class="row mb-6 row-cols-2">
                 <div class="col-xl-6 col-sm-6 col-12">
@@ -63,40 +64,27 @@ Finestcarauction - {{$lots->name}}
                                         </span>
                                         <span class="h4 text-muted fw-light d-block mt-1">{{date('d M Y, H:m', strtotime($lots->end_time));}}</span>
                                     </div>
-                                    @if ($lots->status != 2)
-                                        @if ($lots->end_time <= $current_time)
-                                            @if (DB::table('bids')->select('user_id')->where('lot_id',$lots->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id())
-                                                @if (DB::table('bids')->groupBy('lot_id')->orderBy('lot_id', 'desc')->first()->payment_status != '200')
-                                                    <button class="btn btn-outline-success text-center w-100 mt-5" id="pay-button">Pay</button>
-                                                @else
-                                                    <button class="btn btn-outline-success text-center w-100 mt-5" id="pay-button" disabled>Payed</button>
-                                                @endif
-                                            @else
-                                            <button type="button" class="btn btn-outline-secondary text-center w-100 mt-5" disabled>
-                                                <p class="text-center">Bid Ends</p>
-                                            </button>
-                                            @endif
-                                        @else
-                                            <button type="button" class="btn text-center w-100 blue-800 mt-5" data-bs-toggle="modal" data-bs-target="#BidModal">
-                                                <p class="text-center">Bid</p>
-                                            </button>
-                                        @endif
-                                    @else
-                                        <button type="button" class="btn btn-outline-secondary text-center w-100 mt-5" disabled>
-                                            <p class="text-center">Bid Temporary Pending</p>
-                                        </button>  
-                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
                     <h2 class="classic fw-semibold d-block my-5">Description<h2>
                     <h4 class="fw-semi-bold d-block mb-2">{{$lots->name}}</h4>
-                    <h5 class="text-muted fw-light d-block mb-2">{{$lots->description}}</h5>
+                        {{-- <div class="outer" id="portfolio"> --}}
+                            <h5 class="text-muted fw-light d-block mb-2">{{$lots->description}}</h5>
+                        {{-- </div> --}}
+                    {{-- <div style="padding-top: 30px;">
+                        <a class="button" style="color: #23448d">
+                          <strong id="expandbtn">
+                            Read More
+                          </strong>
+                        </a>
+                    </div> --}}
                 </div>
             </div>
         </div>
     </main>
+</div>
 <form action="{{ route('bid.new',$lots->id) }}" method="post" enctype="multipart/form-data">
     @csrf
     <div class="modal fade" id="BidModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -195,44 +183,5 @@ Finestcarauction - {{$lots->name}}
             }, 1000);
         }
     });
-
-    @if ($lots->end_time <= $current_time)
-    const payButton = document.querySelector('#pay-button');
-    payButton.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        snap.pay('{{ $snapToken }}', {
-            // Optional
-            onSuccess: function(result) {
-                /* You may add your own js here, this is just example */
-                // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                // console.log(result)
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('test',$bid->id) }}",
-                    data: {
-                        'id':{{ $lots->id }},
-                        'result':result
-                    },
-                    success: function (data) {
-                        console.log(data);
-                    },
-                });
-            },
-            // Optional
-            onPending: function(result) {
-                /* You may add your own js here, this is just example */
-                // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                console.log(result)
-            },
-            // Optional
-            onError: function(result) {
-                /* You may add your own js here, this is just example */
-                // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                console.log(result)
-            }
-        });
-    });
-    @endif
 </script>
 @endsection

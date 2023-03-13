@@ -46,14 +46,21 @@ class LotController extends Controller
         return view('manager.sell', compact('lots','categories','current_time'));
     }
 
+    public function statusup(Request $request, $id)
+    {
+        Lot::where('id', $id)->update([
+            'status' => $request->status,
+        ]);
+
+        return redirect()->back()->with('success', 'Status updated successfully!');
+    }
+
     public function open(Request $request, $id)
     {
-        // $request->validate([
-        //     'status' => 'required',
-        //     'end_time' => 'required',
-        // ]);
+        $request->validate([
+            'end_time' => 'required',
+        ]);
 
-        // $input = $request->all();
         Lot::where('id', $id)->update([
             'status' => $request->status,
             'end_time' => $request->end_time,
@@ -64,7 +71,6 @@ class LotController extends Controller
 
     public function close(Request $request, $id)
     {
-        // $input = $request->all();
         Lot::where('id', $id)->update([
             'status' => $request->status,
             'end_time' => Carbon::now('Asia/Jakarta'),
@@ -165,6 +171,12 @@ class LotController extends Controller
         }
     }
 
+    public function showAdmin(Bid $bid, $id) {
+        $current_time = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
+        $lots = Lot::where('id', $id)->with('bid')->first();
+            return view('manager.detail', compact('lots','current_time'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -183,7 +195,7 @@ class LotController extends Controller
      * @param  \App\Models\Lot  $lot
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Lot $lot)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required',
@@ -205,7 +217,7 @@ class LotController extends Controller
             unset($input['image']);
         }
 
-        Lot::where('id', $lot)->update($input);
+        Lot::where('id', $id)->update($input);
 
         return redirect()->back()->with('success', 'Lots updated successfully!');
     }

@@ -39,6 +39,13 @@ class BidController extends Controller
         // dd($bid);
         // Bid::create($bid);
 
-        return redirect()->route('lot.index')->with('success', 'Bid has been bidded!');
+        return redirect()->route('lot.index')->with('success', 'Items has been bidded!');
     }
+    
+    public function destroy($id) {
+        Bid::select('user_id')->where('lot_id',$id)->delete();
+
+        return redirect()->back()->with('success', 'Bid delete successfully!');
+    }
+
 }

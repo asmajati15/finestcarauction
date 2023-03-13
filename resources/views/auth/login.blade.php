@@ -25,8 +25,14 @@
 
                   <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Use your <span class="classic"><b>Finestauction</b></span> Account</h5>
 
+                  @if (session('error'))
+                    <div class="alert alert-danger mb-3 pb-3">
+                        {{ session('error') }}
+                    </div>
+                  @endif
+
                   <div class="form-outline mb-4">
-                    <label class="form-label-wrapper" for="email" :value="__('Email')">
+                    <label class="form-label" for="email" :value="__('Email')">
                       <p class="form-label">Email</p>
                     <input type="email" class="form-control" id="email" name="email" :value="old('email')" required autofocus autocomplete="username">
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />

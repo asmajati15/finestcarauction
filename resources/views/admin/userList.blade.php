@@ -1,4 +1,4 @@
-@extends('layouts/home')
+@extends('layouts/admin')
 
 @section('title')
 Finestcarauction Admin Admin - User List
@@ -13,7 +13,7 @@ Finestcarauction Admin Admin - User List
                 <div class="row align-items-center">
                     <div class="col-sm-6 col-12 mb-4 mb-sm-0">
                         <!-- Title -->
-                        <h1 class="h2 mb-0 ls-tight">User</h1>
+                        <h1 class="h2 mb-0 ls-tight">Account List</h1>
                     </div>
                     <!-- Actions -->
                     <div class="col-sm-6 col-12 text-sm-end">
@@ -34,47 +34,152 @@ Finestcarauction Admin Admin - User List
     <main class="py-6 bg-surface-secondary">
         <div class="container-fluid">
             <div class="card shadow border-0 mb-7">
-            <div class="card-header">
-                <h5 class="mb-0">User List</h5>
+                <div class="card-header">
+                    <h5 class="mb-0">Manager List</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($users as $user)
+                            @if ($user->type == 'manager')
+                            <tr>
+                                <td>
+                                    <p class="text-heading font-semibold">{{$user->name}}</p>
+                                </td>
+                                <td>
+                                    <p>{{$user->email}}</p>
+                                </td>
+                                <td>
+                                    @if ($user->status == 0)
+                                        <span class="badge badge-pill bg-soft-success text-success me-2">
+                                            <span>Active</span>
+                                        </span>
+                                    @else
+                                        <span class="badge badge-pill bg-soft-danger text-danger me-2">
+                                            <span>Blacklisted</span>
+                                        </span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($user->status == 0)
+                                    <form action="{{ route('admin.blacklist',$user->id) }}" method="POST" class="d-inline-block">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-sm btn-square btn-outline-danger" name="status" value="1" onclick="return confirm('Are you sure want to blacklist this user?')">
+                                            <i class="bi bi-person-slash"></i>
+                                        </button>
+                                    </form>
+                                    @else
+                                    <form action="{{ route('admin.unblacklist',$user->id) }}" method="POST" class="d-inline-block">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-sm btn-square btn-outline-primary" name="status" value="0" onclick="return confirm('Are you sure want to un-blacklist this user?')">
+                                            <i class="bi bi-person-check"></i>
+                                        </button>
+                                    </form>
+                                    @endif
+                                    <a class="btn btn-sm btn-square btn-outline-success" data-bs-toggle="modal" data-bs-target="#UpdateModal" data-url="{{ route('admin.update',$user->id) }}" data-name="{{ $user->name }}" data-email="{{ $user->email }}">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form action="{{ route('admin.destroy',$user->id) }}" method="POST" class="d-inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-square btn-outline-danger" onclick="return confirm('Are you sure want to delete this user?')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer border-0 py-5">
+                    <span class="text-muted text-sm">Showing 10 items out of 250 results found</span>
+                </div>
             </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-nowrap">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($users as $user)
-                        <tr>
-                            <td>
-                                <p class="text-heading font-semibold">{{$user->name}}</p>
-                            </td>
-                            <td>
-                                <p>{{$user->email}}</p>
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-square btn-outline-success" data-bs-toggle="modal" data-bs-target="#UpdateModal" data-url="{{ route('admin.update',$user->id) }}" data-name="{{ $user->name }}" data-email="{{ $user->email }}">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <form action="{{ route('admin.destroy',$user->id) }}" method="POST" class="d-inline-block">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-square btn-outline-danger" onclick="return confirm('Are you sure want to delete this user?')">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer border-0 py-5">
-                <span class="text-muted text-sm">Showing 10 items out of 250 results found</span>
-            </div>
+            <div class="card shadow border-0 mb-7">
+                <div class="card-header">
+                    <h5 class="mb-0">User List</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($users as $user)
+                                @if ($user->type == 'user')
+                                <tr>
+                                    <td>
+                                        <p class="text-heading font-semibold">{{$user->name}}</p>
+                                    </td>
+                                    <td>
+                                        <p>{{$user->email}}</p>
+                                    </td>
+                                    <td>
+                                        @if ($user->status == 0)
+                                            <span class="badge badge-pill bg-soft-success text-success me-2">
+                                                <span>Active</span>
+                                            </span>
+                                        @else
+                                            <span class="badge badge-pill bg-soft-danger text-danger me-2">
+                                                <span>Blacklisted</span>
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($user->status == 0)
+                                        <form action="{{ route('admin.blacklist',$user->id) }}" method="POST" class="d-inline-block">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-sm btn-square btn-outline-danger" name="status" value="1" onclick="return confirm('Are you sure want to blacklist this user?')">
+                                                <i class="bi bi-person-slash"></i>
+                                            </button>
+                                        </form>
+                                        @else
+                                        <form action="{{ route('admin.unblacklist',$user->id) }}" method="POST" class="d-inline-block">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-sm btn-square btn-outline-primary" name="status" value="0" onclick="return confirm('Are you sure want to un-blacklist this user?')">
+                                                <i class="bi bi-person-check"></i>
+                                            </button>
+                                        </form>
+                                        @endif
+                                        <a class="btn btn-sm btn-square btn-outline-success" data-bs-toggle="modal" data-bs-target="#UpdateModal" data-url="{{ route('admin.update',$user->id) }}" data-name="{{ $user->name }}" data-email="{{ $user->email }}">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="{{ route('admin.destroy',$user->id) }}" method="POST" class="d-inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-square btn-outline-danger" onclick="return confirm('Are you sure want to delete this user?')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer border-0 py-5">
+                    <span class="text-muted text-sm">Showing 10 items out of 250 results found</span>
+                </div>
             </div>
         </div>
     </main>

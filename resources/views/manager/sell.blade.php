@@ -1,4 +1,4 @@
-@extends('layouts/home')
+@extends('layouts/admin')
 
 @section('title')
 Finestcarauction Manager - Sell Lots
@@ -59,6 +59,7 @@ Finestcarauction Manager - Sell Lots
                         {{-- @dd($lot) --}}
                         {{-- @dd(DB::table('bids')->where('lot_id',5)->orderBy('bid_price','DESC')->get()) --}}
                         <tr>
+                            <p hidden>{{ $lot->tracking_number }}</p>
                             <td>
                                 <img alt="{{$lot->name}}" src="/lot-images/{{ $lot->image }}"  class="avatar avatar-sm rounded-circle me-2">
                                 <a class="text-heading font-semibold" href="{{ route('manager.lot.show',$lot->id) }}" style="display: inline-block; width: 250px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"> {{$lot->name}} </a>
@@ -83,39 +84,63 @@ Finestcarauction Manager - Sell Lots
                                 @endif
                             </td>
                             <td>
-                                @if ($lot->status === 0)
+                                @switch($lot->status)
+                                    @case(1)
+                                        <span class="badge badge-pill bg-soft-primary text-primary me-2">
+                                            <span>On Progress</span>
+                                        </span>
+                                        @break
+                                    @case(2)
+                                        <span class="badge badge-pill bg-soft-warning text-warning me-2">
+                                            <span>Pending</span>
+                                        </span>
+                                        @break
+                                    @case(3)
+                                        <span class="badge badge-pill bg-soft-secondary text-secondary me-2">
+                                            <span>Archived</span>
+                                        </span>
+                                        @break
+                                    @default
                                     <span class="badge badge-pill bg-soft-danger text-danger me-2">
                                         <span>Ends</span>
                                     </span>
-                                @else
-                                    <span class="badge badge-pill bg-soft-primary text-primary me-2">
-                                        <span>On Progress</span>
-                                    </span>
-                                @endif
+                                @endswitch
                             </td>
                             <td class="text-end">
-                                {{-- <a class="btn btn-primary" href="{{ route('manager.lot.edit',$lot->id) }}">Edit</a> --}}
-                                @if ($lot->status === 0)
-                                    {{-- <form action="{{ route('manager.lot.open',$lot->id) }}" method="POST" class="d-inline-block">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="btn btn-sm btn-outline-primary" name="status" value="1">
-                                            Open
-                                        </button> --}}
-                                        <a class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#OpenModal" data-url="{{ route('manager.lot.open',$lot->id) }}" data-end_time="{{ $lot->end_time }}">
-                                            Open
-                                        </a>
-                                    {{-- </form> --}}
-                                @else
-                                    <form action="{{ route('manager.lot.close',$lot->id) }}" method="POST" class="d-inline-block">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="btn btn-sm btn-outline-warning" name="status" value="0" onclick="return confirm('Are you sure want to close this lot?')">
-                                            Close
-                                        </button>
-                                    </form>
-                                @endif
-                                <a class="btn btn-sm btn-square btn-outline-success" data-bs-toggle="modal" data-bs-target="#UpdateModal" data-url="{{ route('manager.lot.update',$lot->id) }}" data-name="{{ $lot->name }}" data-description="{{ $lot->description }}" data-start_price="{{ $lot->start_price }}" data-bid_increment="{{ $lot->bid_increment }}" data-end_time="{{ $lot->end_time }}" data-image="/lot-images/{{ $lot->image }}">
+                                @switch($lot->status)
+                                    @case(1)
+                                        <form action="{{ route('manager.lot.close',$lot->id) }}" method="POST" class="d-inline-block">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-sm btn-outline-warning" name="status" value="0" onclick="return confirm('Are you sure want to close this lot?')">
+                                                Close
+                                            </button>
+                                        </form>
+                                        @break
+                                    @case(2)
+                                        <form action="{{ route('manager.lot.statusUp',$lot->id) }}" method="POST" class="d-inline-block">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-sm btn-outline-info" name="status" value="1" onclick="return confirm('Are you sure want to resume this lot?')">
+                                                Resume
+                                            </button>
+                                        </form>
+                                        @break
+                                    @case(3)
+                                        <form action="{{ route('manager.lot.statusUp',$lot->id) }}" method="POST" class="d-inline-block">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary" name="status" value="0" onclick="return confirm('Are you sure want to unarchive this lot?')">
+                                                Unarchive
+                                            </button>
+                                        </form>
+                                        @break
+                                    @default
+                                    <a class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#OpenModal" data-url="{{ route('manager.lot.open',$lot->id) }}" data-end_time="{{ $lot->end_time }}">
+                                        Open
+                                    </a>
+                                @endswitch
+                                <a class="btn btn-sm btn-square btn-outline-success" data-bs-toggle="modal" data-bs-target="#UpdateModal" data-url="{{ route('manager.lot.update',$lot->id) }}" data-name="{{ $lot->name }}" data-description="{{ $lot->description }}" data-start_price="{{ $lot->start_price }}" data-bid_increment="{{ $lot->bid_increment }}" data-end_time="{{ $lot->end_time }}" data-image="/lot-images/{{ $lot->image }}" data-tracking_number="{{ $lot->tracking_number }}">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <form action="{{ route('manager.lot.destroy',$lot->id) }}" method="POST" class="d-inline-block">
@@ -133,7 +158,7 @@ Finestcarauction Manager - Sell Lots
                 </table>
             </div>
             <div class="card-footer border-0 py-5">
-                <span class="text-muted text-sm">Showing 10 items out of 250 results found</span>
+                <span class="text-muted text-sm">Showing 10 items out of 350 results found</span>
             </div>
             </div>
         </div>
@@ -161,12 +186,17 @@ Finestcarauction Manager - Sell Lots
                     </div>
                     <div class="row mb-3">
                         <label class="form-label">Category</label>
-                        <select class="form-select" aria-label="Default select example" name="category_id">
+                        <select class="form-select @error('category_id') is-invalid @enderror" aria-label="Default select example" name="category_id">
                             <option hidden>Select Category</option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
+                        @error('category_id')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </div>
                     <div class="row mb-3">
                         <label class="form-label">Description</label>
@@ -187,15 +217,6 @@ Finestcarauction Manager - Sell Lots
                             </div>
                             @enderror
                         </div>
-                        {{-- <div class="col-sm-4">
-                            <label class="form-label">Max Price</label>
-                            <input type="number" class="form-control @error('max_price') is-invalid @enderror" name="max_price" value="{{ old('max_price') }}">
-                            @error('max_price')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div> --}}
                         <div class="col-sm-6">
                             <label class="form-label">Bid Increment</label>
                             <input type="number" class="form-control @error('bid_increment') is-invalid @enderror" name="bid_increment" value="{{ old('bid_increment') }}">
@@ -217,7 +238,7 @@ Finestcarauction Manager - Sell Lots
                     </div>
                     <div class="row mb-3">
                         <label for="formFileMultiple" class="form-label">Image</label>
-                        <input class="form-control @error('image') is-invalid @enderror" type="file" id="formFileMultiple" multiple accept="image/*" name="image">
+                        <input class="dropify @error('image') is-invalid @enderror" type="file" id="formFileMultiple" multiple accept="image/*" name="image" data-max-file-size="2M" data-allowed-file-extensions="jpg png jpeg">
                         @error('image')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -276,12 +297,17 @@ Finestcarauction Manager - Sell Lots
                     </div>
                     <div class="row mb-3">
                         <label class="form-label">Category</label>
-                        <select class="form-select" aria-label="Default select example" name="category_id">
+                        <select class="form-select @error('category_id') is-invalid @enderror" aria-label="Default select example" name="category_id">
                             <option hidden>Select Category</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
                         </select>
+                        @error('category_id')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </div>
                     <div class="row mb-3">
                         <label class="form-label">Description</label>
@@ -322,8 +348,28 @@ Finestcarauction Manager - Sell Lots
                         @enderror
                     </div>
                     <div class="row mb-3">
-                        <label for="formFileMultiple" class="form-label">Image</label>
-                        <input class="form-control" type="file" id="formFileMultiple" multiple accept="image/*" name="image" value="${$(e.relatedTarget).data('image')}">
+                        <label class="form-label">Status</label>
+                        <select class="form-select @error('status') is-invalid @enderror" aria-label="Default select example" name="status">
+                            <option hidden>Select Status</option>
+                                <option value="0">Close</option>
+                                <option value="1">Open</option>
+                                <option value="2">Pending</option>
+                                <option value="3">Archived</option>
+                        </select>
+                        @error('status')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label">Tracking Number</label>
+                        <input type="number" min="1000000000" max="9999999999" class="form-control @error('tracking_number') is-invalid @enderror" name="tracking_number"  value="${$(e.relatedTarget).data('tracking_number')}">
+                        @error('tracking_number')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -378,5 +424,7 @@ Finestcarauction Manager - Sell Lots
     'error',
     )
     @endif
+
+    $('.dropify').dropify();
 </script>
 @endsection
