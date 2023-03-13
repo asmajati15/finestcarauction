@@ -1,4 +1,4 @@
-@extends('auction/layout')
+@extends('layouts/home')
 
 @section('title')
 Finestcarauction
@@ -104,14 +104,20 @@ Finestcarauction
                             <div class="mt-2 mb-0 text-sm">
                                 @if ($lot->end_time <= $current_time)
                                     {{-- @if (DB::table('bids')->select('user_id')->where('lot_id',$lot->id)->orderBy('bid_price', 'DESC')->first()->user_id==Auth::id()) --}}
-                                    @if ($lot->user_id==Auth::id())
-                                    <a href="{{ url('lot',$lot->id)}}" class="btn btn-outline-success text-center w-100">
-                                        <p class="text-center">Go to Payement</p>
-                                    </a>
+                                    @if (Auth::user()!=null)
+                                        @if ($lot->user_id==Auth::id())
+                                            <a href="{{ url('lot',$lot->id)}}" class="btn btn-outline-success text-center w-100">
+                                                <p class="text-center">Go to Payment</p>
+                                            </a>
+                                        @else
+                                            <button type="button" class="btn btn-outline-secondary text-center w-100" disabled>
+                                                <p class="text-center">Bid Ends</p>
+                                            </button>
+                                        @endif
                                     @else
-                                    <button type="button" class="btn btn-outline-secondary text-center w-100" disabled>
-                                        <p class="text-center">Bid Ends</p>
-                                    </button>
+                                        <button type="button" class="btn btn-outline-secondary text-center w-100" disabled>
+                                            <p class="text-center">Bid Ends</p>
+                                        </button>
                                     @endif
                                 @else
                                     <a href="{{ url('lot',$lot->id)}}" class="btn text-center w-100 blue-800">

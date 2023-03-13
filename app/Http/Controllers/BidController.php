@@ -39,6 +39,6 @@ class BidController extends Controller
         // dd($bid);
         // Bid::create($bid);
 
-        return redirect()->route('lot.index')->with('success', 'Product created successfully.');
+        return redirect()->route('lot.index')->with('success', 'Bid has been bidded!');
     }
 }

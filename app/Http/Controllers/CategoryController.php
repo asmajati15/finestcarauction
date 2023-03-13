@@ -15,7 +15,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::get();
-        return view('auction.category', compact('categories'));
+        return view('manager.category', compact('categories'));
     }
 
     /**

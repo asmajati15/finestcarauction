@@ -1,7 +1,7 @@
-@extends('auction/layout')
+@extends('layouts/home')
 
 @section('title')
-Finestcarauction - Sell Lots
+Finestcarauction Manager - Sell Lots
 @endsection
 
 @section('main-content')
@@ -98,16 +98,18 @@ Finestcarauction - Sell Lots
                                 @if ($lot->status === 0)
                                     {{-- <form action="{{ route('manager.lot.open',$lot->id) }}" method="POST" class="d-inline-block">
                                         @csrf
+                                        @method('PUT')
                                         <button type="submit" class="btn btn-sm btn-outline-primary" name="status" value="1">
                                             Open
                                         </button> --}}
-                                        <a class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#OpenModal">
+                                        <a class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#OpenModal" data-url="{{ route('manager.lot.open',$lot->id) }}" data-end_time="{{ $lot->end_time }}">
                                             Open
                                         </a>
                                     {{-- </form> --}}
                                 @else
                                     <form action="{{ route('manager.lot.close',$lot->id) }}" method="POST" class="d-inline-block">
                                         @csrf
+                                        @method('PUT')
                                         <button type="submit" class="btn btn-sm btn-outline-warning" name="status" value="0" onclick="return confirm('Are you sure want to close this lot?')">
                                             Close
                                         </button>
@@ -136,37 +138,6 @@ Finestcarauction - Sell Lots
             </div>
         </div>
     </main>
-</div>
-
-<div class="modal fade" id="OpenModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <form action="{{ route('manager.lot.open',$lot->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <div class="modal-header">
-                    <h5 class="modal-title">Open this lot to auction</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                        <input type="hidden" name="status" value="1">
-                    <div class="row mb-3">
-                        <label class="form-label">End Time</label>
-                        <input type="datetime-local" class="form-control @error('end_time') is-invalid @enderror" id="end_time" name="end_time" value="{{ old('end_time') }}">
-                        @error('end_time')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn blue-800">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
 </div>
 
 <div class="modal fade" id="AddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -269,6 +240,13 @@ Finestcarauction - Sell Lots
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="OpenModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" id="modal-content2">
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -355,6 +333,36 @@ Finestcarauction - Sell Lots
             </form>
             `;
         $('#modal-content').html(html);
+    });
+
+    $('#OpenModal').on('shown.bs.modal', function(e) {
+        var html = `       
+            <div class="modal-header">
+                <h5 class="modal-title">Open this lot to auction</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="${$(e.relatedTarget).data('url')}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                        <input type="hidden" name="status" value="1">
+                    <div class="row mb-3">
+                        <label class="form-label">End Time</label>
+                        <input type="datetime-local" class="form-control @error('end_time') is-invalid @enderror" id="end_time" name="end_time" value="${$(e.relatedTarget).data('end_time')}">
+                        @error('end_time')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn blue-800">Submit</button>
+                </div>
+            </form>
+            `;
+        $('#modal-content2').html(html);
     });
 
     @if(session()->has('success'))

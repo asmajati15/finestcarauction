@@ -1,7 +1,7 @@
-@extends('auction/layout')
+@extends('layouts/home')
 
 @section('title')
-Finestcarauction - Category List
+Finestcarauction Manager - Category List
 @endsection
 
 @section('main-content')
